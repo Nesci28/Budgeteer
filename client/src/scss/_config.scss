@@ -1,0 +1,25 @@
+$primary-color: rgb(69, 145, 168);
+$secondary-color: rgb(95, 179, 92);
+$success-color: rgb(194, 255, 80);
+$warning-color: rgb(228, 136, 108);
+$danger-color: rgb(255, 0, 0);
+$light-color: rgb(172, 172, 172);
+$dark-color: rgb(43, 43, 43);
+
+input::-webkit-input-placeholder {
+  color: $dark-color !important;
+}
+
+input:-moz-placeholder {
+  /* Firefox 18- */
+  color: $dark-color !important;
+}
+
+input::-moz-placeholder {
+  /* Firefox 19+ */
+  color: $dark-color !important;
+}
+
+input:-ms-input-placeholder {
+  color: $dark-color !important;
+}

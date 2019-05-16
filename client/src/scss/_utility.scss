@@ -1,0 +1,261 @@
+.btn {
+  width: calc(20vw + 6px);
+  height: calc(8vw + 6px);
+  background-color: $dark-color;
+  border-radius: 5px;
+  align-items: center;
+  font-size: 3vw;
+  font-weight: bold;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  text-decoration: none;
+  color: $light-color;
+  cursor: pointer;
+  margin: 5px;
+
+  &-primary {
+    border: solid 3px $primary-color;
+  }
+  &-primary:hover {
+    background-color: lighten($primary-color, 25%);
+    color: $dark-color;
+  }
+  &-secondary {
+    border: solid 3px $secondary-color;
+  }
+  &-secondary:hover {
+    background-color: lighten($secondary-color, 25%);
+    color: $dark-color;
+  }
+  &-danger {
+    border: solid 3px $danger-color;
+  }
+  &-danger:hover {
+    background-color: lighten($danger-color, 25%);
+    color: $dark-color;
+  }
+}
+
+// Links
+.link {
+  text-decoration: none;
+  color: $primary-color;
+  cursor: pointer;
+
+  &:hover {
+    color: $secondary-color;
+  }
+}
+
+// Cursor
+.pointer {
+  cursor: pointer;
+}
+
+// Blur
+.blurWallpaper1 {
+  overflow: hidden;
+  position: relative;
+}
+.blurWallpaper1:before {
+  content: "";
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+
+  z-index: -1;
+
+  display: block;
+  background: url("../assets/wallpaper1.jpg") no-repeat center center/cover;
+  background-attachment: fixed;
+  width: 100%;
+  height: 100%;
+
+  -webkit-filter: blur(5px);
+  -moz-filter: blur(5px);
+  -o-filter: blur(5px);
+  -ms-filter: blur(5px);
+  filter: blur(5px);
+}
+.blurWallpaper2 {
+  overflow: hidden;
+  position: relative;
+}
+.blurWallpaper2:before {
+  content: "";
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+
+  z-index: -1;
+
+  display: block;
+  background: url("../assets/wallpaper2.jpg") no-repeat center center/cover;
+  background-attachment: fixed;
+  width: 100%;
+  height: 100%;
+
+  -webkit-filter: blur(5px);
+  -moz-filter: blur(5px);
+  -o-filter: blur(5px);
+  -ms-filter: blur(5px);
+  filter: blur(5px);
+}
+.blurWallpaper3 {
+  overflow: hidden;
+  position: relative;
+}
+.blurWallpaper3:before {
+  content: "";
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+
+  z-index: -1;
+
+  display: block;
+  background: url("../assets/wallpaper3.jpg") no-repeat center center/cover;
+  background-attachment: fixed;
+  width: 100%;
+  height: 100%;
+
+  -webkit-filter: blur(5px);
+  -moz-filter: blur(5px);
+  -o-filter: blur(5px);
+  -ms-filter: blur(5px);
+  filter: blur(5px);
+}
+.blurWallpaper4 {
+  overflow: hidden;
+  position: relative;
+}
+.blurWallpaper4:before {
+  content: "";
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+
+  z-index: -1;
+
+  display: block;
+  background: url("../assets/wallpaper4.jpg") no-repeat center center/cover;
+  background-attachment: fixed;
+  width: 100%;
+  height: 100%;
+
+  -webkit-filter: blur(5px);
+  -moz-filter: blur(5px);
+  -o-filter: blur(5px);
+  -ms-filter: blur(5px);
+  filter: blur(5px);
+}
+.blurWallpaper5 {
+  overflow: hidden;
+  position: relative;
+}
+.blurWallpaper5:before {
+  content: "";
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+
+  z-index: -1;
+
+  display: block;
+  background: url("../assets/wallpaper5.jpg") no-repeat center center/cover;
+  background-attachment: fixed;
+  width: 100%;
+  height: 100%;
+
+  -webkit-filter: blur(5px);
+  -moz-filter: blur(5px);
+  -o-filter: blur(5px);
+  -ms-filter: blur(5px);
+  filter: blur(5px);
+}
+.blurWallpaper6 {
+  overflow: hidden;
+  position: relative;
+}
+.blurWallpaper6:before {
+  content: "";
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+
+  z-index: -1;
+
+  display: block;
+  background: url("../assets/wallpaper6.jpg") no-repeat center center/cover;
+  background-attachment: fixed;
+  width: 100%;
+  height: 100%;
+
+  -webkit-filter: blur(5px);
+  -moz-filter: blur(5px);
+  -o-filter: blur(5px);
+  -ms-filter: blur(5px);
+  filter: blur(5px);
+}
+.blurWallpaper7 {
+  overflow: hidden;
+  position: relative;
+}
+.blurWallpaper7:before {
+  content: "";
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+
+  z-index: -1;
+
+  display: block;
+  background: url("../assets/wallpaper7.jpg") no-repeat center center/cover;
+  background-attachment: fixed;
+  width: 100%;
+  height: 100%;
+
+  -webkit-filter: blur(5px);
+  -moz-filter: blur(5px);
+  -o-filter: blur(5px);
+  -ms-filter: blur(5px);
+  filter: blur(5px);
+}
+
+.box {
+  z-index: 1;
+  left: 50%;
+  transform: translate(-50%, -60px);
+  width: 300px;
+  padding-top: 100px;
+  padding-bottom: 100px;
+  border: solid 3px black;
+}
+
+.input {
+  width: 75%;
+  background-color: transparent;
+  height: 30px;
+  border: solid 3px black;
+  margin-bottom: 20px;
+
+  &:hover {
+    border: solid 3px #4591a8;
+  }
+}
