@@ -14,10 +14,10 @@
             </ul>
           </li>
           <li>
-            <a href="/income">Revenus</a>
+            <a>Revenus</a>
             <ul>
               <li>
-                <a href="/income/passive">Config</a>
+                <a href="/#/income/config">Config</a>
               </li>
               <li>
                 <a href="/income/ajouter">Ajouter</a>
@@ -237,6 +237,7 @@ export default {
 @import url("https://fonts.googleapis.com/css?family=Anonymous+Pro");
 @import "./css/style.min.css";
 @import "../node_modules/animate.css/animate.min.css";
+
 #app {
   font-family: "Anonymous Pro", monospace;
   font-variant: small-caps;
@@ -246,5 +247,6 @@ export default {
   /* background: url("./assets/wallpaper1.jpg") no-repeat center center/cover; */
   background-attachment: fixed;
   z-index: 1;
+  overflow: hidden;
 }
 </style>

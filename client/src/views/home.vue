@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a href="/#/login" class="btn btn-primary">Login</a>
+    <a style="margin-right: 20px;" href="/#/login" class="btn btn-primary">Login</a>
     <a href="/#/signup" class="btn btn-secondary">Signup</a>
   </div>
 </template>
@@ -67,5 +67,4 @@ export default {
 </script>
 
 <style lang="scss">
-@import "../css/style.min.css";
 </style>

@@ -18,7 +18,6 @@
 export default {
   data() {
     return {
-      // fullWidthImage: this.fullWidth(),
       images: [
         { url: require("../assets/wallpaper1.jpg"), id: "wallpaper1" },
         { url: require("../assets/wallpaper2.jpg"), id: "wallpaper2" },
@@ -63,5 +62,4 @@ export default {
 </script>
 
 <style lang="scss">
-@import "../css/style.min.css";
 </style>

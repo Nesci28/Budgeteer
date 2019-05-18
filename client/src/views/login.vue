@@ -19,10 +19,20 @@
           blurWallpaper7: wallpaper7,
         }"
     >
+      <div v-if="errorInfo" class="alert alert-danger">Informations invalides</div>
+      <div v-if="missingInfo" class="alert alert-warning">Informations manquantes</div>
       <h1>Login</h1>
-      <input class="input" v-model="username" type="text" placeholder="Username">
-      <input class="input" v-model="password" type="password" placeholder="Password">
-      <a @click="login" class="btn btn-primary">Login</a>
+      <input id="inputUsername" class="input" v-model="username" type="text" placeholder="Username">
+      <input
+        id="inputPassword"
+        class="input"
+        v-model="password"
+        type="password"
+        placeholder="Password"
+      >
+      <div>
+        <a @click="login" class="btn btn-primary">Ouvrir</a>
+      </div>
       <h3 style="font-size:20px;margin-top:10px;">
         Pas de compte?
         <router-link class="link" to="/signup">Signup</router-link>
@@ -51,7 +61,9 @@ export default {
       wallpaper7: false,
       username: "",
       password: "",
-      urlLogin: ""
+      urlLogin: "",
+      errorInfo: false,
+      missingInfo: false
     };
   },
   methods: {
@@ -64,9 +76,23 @@ export default {
         if (res.data.message == "logged in") {
           this.$store.state.loggedIn = true;
           this.$router.push("/account");
+        } else {
+          this.errorInfo = true;
         }
       } else {
-        console.log("Informations manquantes dans la forme");
+        const inputUsernameElement = document.getElementById("inputUsername");
+        const inputPasswordElement = document.getElementById("inputPassword");
+        this.missingInfo = true;
+        if (this.username == "") {
+          inputUsernameElement.style.border = "solid 2px rgb(228, 136, 108)";
+        } else {
+          inputUsernameElement.style.border = "solid 2px black";
+        }
+        if (this.password == "") {
+          inputPasswordElement.style.border = "solid 2px rgb(228, 136, 108)";
+        } else {
+          inputPasswordElement.style.border = "solid 2px black";
+        }
       }
     },
     async checkLogin() {
@@ -119,10 +145,14 @@ export default {
         break;
     }
     this.checkLogin();
+  },
+  created() {
+    window.addEventListener("keypress", e => {
+      if (e.keyCode == 13) this.login();
+    });
   }
 };
 </script>
 
 <style lang="scss">
-@import "../css/style.min.css";
 </style>

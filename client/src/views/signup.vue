@@ -18,16 +18,33 @@
           blurWallpaper7: wallpaper7,
         }"
     >
+      <div v-if="passwordMatch" class="alert alert-danger">Les mots de passe ne correspondent pas</div>
+      <div v-if="missingInfo" class="alert alert-warning">Informations manquantes</div>
       <h1>Signup</h1>
-      <input class="input" v-model="username" type="text" placeholder="Nom de compte">
-      <input class="input" v-model="password" type="password" placeholder="Mot de passe">
       <input
+        id="inputUsername"
+        class="input"
+        v-model="username"
+        type="text"
+        placeholder="Nom de compte"
+      >
+      <input
+        id="inputPassword"
+        class="input"
+        v-model="password"
+        type="password"
+        placeholder="Mot de passe"
+      >
+      <input
+        id="inputConfirmPassword"
         class="input"
         v-model="confirmPassword"
         type="password"
         placeholder="Confirmation du mot de passe"
       >
-      <a @click="signup" class="btn btn-primary">Creer</a>
+      <div>
+        <a @click="signup" class="btn btn-primary">Creer</a>
+      </div>
       <h3 style="font-size:20px;margin-top:10px;">
         Tu as deja un compte?
         <router-link class="link" to="/login">Login</router-link>
@@ -57,21 +74,50 @@ export default {
       wallpaper7: false,
       username: "",
       password: "",
-      confirmPassword: ""
+      confirmPassword: "",
+      missingInfo: false,
+      passwordMatch: false
     };
   },
   methods: {
     async signup() {
-      if (this.password == this.confirmPassword) {
-        let res = await axios.post(this.urlRegister, {
-          username: this.username,
-          password: this.password
-        });
-        if (res.data.message == "account created") {
-          this.$router.push("/login");
+      this.missingInfo = false;
+      this.passwordMatch = false;
+      const inputUsernameElement = document.getElementById("inputUsername");
+      const inputPasswordElement = document.getElementById("inputPassword");
+      const inputConfirmPasswordElement = document.getElementById(
+        "inputConfirmPassword"
+      );
+      if (this.username && this.password && this.confirmPassword) {
+        if (this.password == this.confirmPassword) {
+          let res = await axios.post(this.urlRegister, {
+            username: this.username,
+            password: this.password
+          });
+          if (res.data.message == "account created") {
+            this.$router.push("/login");
+          }
+        } else {
+          this.passwordMatch = true;
         }
       } else {
-        console.log("Les mot de passes ne correspondent pas");
+        this.missingInfo = true;
+        if (this.username == "") {
+          inputUsernameElement.style.border = "solid 2px rgb(228, 136, 108)";
+        } else {
+          inputUsernameElement.style.border = "solid 2px black";
+        }
+        if (this.password == "") {
+          inputPasswordElement.style.border = "solid 2px rgb(228, 136, 108)";
+        } else {
+          inputPasswordElement.style.border = "solid 2px black";
+        }
+        if (this.confirmPassword == "") {
+          inputConfirmPasswordElement.style.border =
+            "solid 2px rgb(228, 136, 108)";
+        } else {
+          inputConfirmPasswordElement.style.border = "solid 2px black";
+        }
       }
     }
   },
@@ -116,10 +162,14 @@ export default {
         this.wallpaper7 = true;
         break;
     }
+  },
+  created() {
+    window.addEventListener("keypress", e => {
+      if (e.keyCode == 13) this.signup();
+    });
   }
 };
 </script>
 
 <style lang="scss">
-@import "../css/style.min.css";
 </style>

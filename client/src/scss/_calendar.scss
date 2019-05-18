@@ -1,0 +1,27 @@
+.calendar {
+  height: 75vh;
+  background-color: rgba(255, 255, 255, 0.5);
+  margin: 20px;
+}
+.vuecal--month-view .vuecal__cell {
+  height: 80px;
+}
+
+.vuecal--month-view .vuecal__cell-content {
+  justify-content: flex-start;
+  height: 100%;
+  align-items: flex-end;
+}
+
+.vuecal--month-view .vuecal__cell-date {
+  padding: 4px;
+}
+.vuecal--month-view .vuecal__no-event {
+  display: none;
+}
+.outcome {
+  background-color: rgba(255, 0, 0, 0.5) !important;
+}
+.income {
+  background-color: rgba(0, 255, 0, 0.5) !important;
+}
