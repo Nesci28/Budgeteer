@@ -1,6 +1,5 @@
 <template>
   <div>
-    <transition name="fade" mode="out-in"></transition>
     <Hexagon v-if="loading"></Hexagon>
     <div class="configBox">
       <div class="item" v-for="event in events" :key="event[0]">
@@ -76,22 +75,12 @@
               onkeypress="return event.charCode == 46 || (event.charCode >= 48 && event.charCode <= 57)"
             >
           </li>
-        </ul>
-        <ul>
-          <li v-if="montant" style="width:calc(50% - 50px); padding-bottom: 13px;">
-            <input type="checkbox" v-model="checkboxDate">
-            <label for="checkbox">Maintenant?</label>
-          </li>
-          <li v-if="montant" style="width: calc(50% - 50px); padding-bottom: 9.5px;">
-            <datepicker
-              v-model="startDate"
-              class="fullscreen-when-on-mobile"
-              :disabled="checkboxDate"
-            ></datepicker>
-          </li>
-          <li v-if="montant" style="width: 100px;float: right;">
-            <a @click="add" class="btn btn-success">+</a>
-          </li>
+          <a
+            v-if="montant"
+            @click="add"
+            class="btn btn-success"
+            style="float: right; margin-top:3px;margin-right: 5px;"
+          >+</a>
         </ul>
       </div>
     </div>
@@ -106,12 +95,10 @@ axios.defaults.headers = {
   "Content-Type": "application/json"
 };
 import { Hexagon } from "vue-loading-spinner";
-import Datepicker from "vuejs-datepicker";
 
 export default {
   components: {
-    Hexagon,
-    Datepicker
+    Hexagon
   },
   data() {
     return {
@@ -144,30 +131,15 @@ export default {
         "Vendredi (2)",
         "Samedi (2)"
       ],
-      months: {
-        Jan: "01",
-        Feb: "02",
-        Mar: "03",
-        Apr: "04",
-        May: "05",
-        Jun: "06",
-        Jul: "07",
-        Aug: "08",
-        Sep: "09",
-        Oct: "10",
-        Nov: "11",
-        Dec: "12"
-      },
       commentaire: "",
       montant: "",
       events: [],
-      startEvents: [],
-      checkboxDate: false,
-      startDate: ""
+      startEvents: []
     };
   },
   methods: {
     add() {
+      console.log("add");
       let frequenceElement = document.getElementById("frequence");
       if (!this.frequence && frequenceElement) {
         frequenceElement.style.border = "solid 1px red";
@@ -188,30 +160,13 @@ export default {
         montantElement.style.border = "solid 1px red";
         return;
       }
-      if (this.checkboxDate == true) {
-        let dt = new Date();
-        this.startDate = [
-          dt.getYear().toString(),
-          dt.getMonth(),
-          dt.getDate().toString()
-        ];
-      } else {
-        this.startDate = this.startDate.toString().split(" ");
-        this.startDate = [
-          this.startDate[3].toString(),
-          +this.months[this.startDate[1]],
-          +this.startDate[2]
-        ];
-      }
       this.events.push([
         this.events.length,
         this.frequence,
         this.day,
         this.commentaire,
-        this.montant,
-        this.date
+        this.montant
       ]);
-      console.log(this.events);
     },
     remove(event) {
       let id = this.events.indexOf(event);
@@ -227,11 +182,11 @@ export default {
   },
   async mounted() {
     if (window.location.href.includes("localhost")) {
-      this.urlConfig = "http://localhost:5000/config/income";
+      this.urlConfig = "http://localhost:5000/config/outcome";
     } else if (window.location.href.includes("192.168")) {
-      this.urlConfig = "http://192.168.0.127:5000/config/income";
+      this.urlConfig = "http://192.168.0.127:5000/config/outcome";
     } else {
-      this.urlConfig = "https://nos-server.now.sh/config/income";
+      this.urlConfig = "https://nos-server.now.sh/config/outcome";
     }
     this.events = await axios.get(this.urlConfig);
     this.events = this.events.data.message;

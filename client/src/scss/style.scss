@@ -3,6 +3,7 @@
 @import "animation";
 @import "settings";
 @import "calendar";
+@import "configPages";
 
 * {
   box-sizing: border-box;
@@ -72,6 +73,11 @@
   ul li:hover ul li {
     display: block;
   }
+}
+.router-link-exact-active {
+  background-color: $secondary-color;
+  color: black !important;
+  border-radius: 5px;
 }
 
 #routes {

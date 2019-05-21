@@ -161,6 +161,9 @@ export default {
       case "wallpaper7.jpg":
         this.wallpaper7 = true;
         break;
+      default:
+        localStorage["background"] = wallpaper1.jpg;
+        this.wallpaper1 = true;
     }
   },
   created() {

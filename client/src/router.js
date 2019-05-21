@@ -6,6 +6,7 @@ import signup from "./views/signup";
 import settings from "./views/settings";
 import account from "./views/account";
 import incomeConfig from "./views/incomeConfig";
+import outcomeConfig from "./views/outcomeConfig";
 
 Vue.use(Router);
 
@@ -15,6 +16,11 @@ export default new Router({
       path: "/income/config",
       name: "incomeConfig",
       component: incomeConfig
+    },
+    {
+      path: "/outcome/config",
+      name: "outcomeConfig",
+      component: outcomeConfig
     },
     {
       path: "/",

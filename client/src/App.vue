@@ -4,59 +4,59 @@
       <div class="toolbar" id="toolbar" v-if="this.$store.state.loggedIn">
         <ul>
           <li class="icon">
-            <a href="/#/settings">
+            <router-link to="/settings">
               <v-icon :style="{ color: 'white', verticalAlign: 'middle' }">fa fa-cog</v-icon>
-            </a>
+            </router-link>
             <ul>
               <li>
-                <a @click="logOut" class="pointer">Quitter</a>
+                <a class="pointer" @click="logOut">Quitter</a>
               </li>
             </ul>
           </li>
           <li>
-            <a>Revenus</a>
+            <router-link to="/account">Revenus</router-link>
             <ul>
               <li>
-                <a href="/#/income/config">Config</a>
+                <router-link to="/income/config">Config</router-link>
               </li>
               <li>
-                <a href="/income/ajouter">Ajouter</a>
+                <router-link to="/income/ajouter">Ajouter</router-link>
               </li>
               <li>
-                <a href="/income/visuel">Visuel</a>
+                <router-link to="/income/visuel">Visuel</router-link>
               </li>
             </ul>
           </li>
           <li>
-            <a href="/outcome">Depenses</a>
+            <router-link to="/account">Depenses</router-link>
             <ul>
               <li>
-                <a href="/outcome/passive">Config</a>
+                <router-link to="/outcome/config">Config</router-link>
               </li>
               <li>
-                <a href="/outcome/ajouter">Ajouter</a>
+                <router-link to="/outcome/ajouter">Ajouter</router-link>
               </li>
               <li>
-                <a href="/outcome/visuel">Visuel</a>
+                <router-link to="/outcome/visuel">Visuel</router-link>
               </li>
             </ul>
           </li>
           <li>
-            <a href="/dettes">Dettes</a>
+            <router-link to="/dettes">Dettes</router-link>
             <ul>
               <li>
-                <a href="/dettes/config">Config</a>
+                <router-link to="/dettes/config">Config</router-link>
               </li>
               <li>
-                <a href="/dettes/ajouter">Ajouter</a>
+                <router-link to="/dettes/ajouter">Ajouter</router-link>
               </li>
               <li>
-                <a href="/dettes/visuel">Visuel</a>
+                <router-link to="/dettes/visuel">Visuel</router-link>
               </li>
             </ul>
           </li>
           <li>
-            <a href="/charts">Graphiques</a>
+            <router-link to="/charts">Graphiques</router-link>
           </li>
           <li class="icon">
             <a>
@@ -82,21 +82,21 @@
       <div class="toolbar" id="toolbar" v-if="!this.$store.state.loggedIn">
         <ul>
           <li class="icon">
-            <a href="/#/settings">
+            <router-link to="/settings">
               <v-icon :style="{ color: 'white', verticalAlign: 'middle' }">fa fa-cog</v-icon>
-            </a>
+            </router-link>
           </li>
           <li>
-            <a href="/#/">Budgeteer</a>
+            <router-link to="/">Budgeteer</router-link>
           </li>
           <li>
-            <a href="/about">A propos</a>
+            <router-link to="/about">A propos</router-link>
             <ul>
               <li>
-                <a href="/aboutMe">Moi</a>
+                <router-link to="/aboutMe">Moi</router-link>
               </li>
               <li>
-                <a href="/aboutBudgeteer">Budgeteer</a>
+                <router-link to="/aboutBudgeteer">Budgeteer</router-link>
               </li>
             </ul>
           </li>
@@ -158,6 +158,7 @@ export default {
     },
     async logOut() {
       let res = await axios.get(this.urlLogout);
+      console.log(res.data);
       if (res.data.message == "logged out") {
         this.$store.state.loggedIn = false;
         this.$router.push("/");
