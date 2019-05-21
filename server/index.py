@@ -169,7 +169,7 @@ def create_transactions(type, transactions):
                     if tx[2] not in body[year][months[i]]:
                         body[year][months[i]][tx[2]] = {}
                     body[year][months[i]][tx[2]].update(
-                        {tx[3]: int(tx[4]) * sign})
+                        {tx[3]: float(tx[4]) * sign})
                 tx[5][1] = 1
 
         if tx[1] == 'Bi-hebdo':
@@ -196,7 +196,7 @@ def create_transactions(type, transactions):
                     if day not in body[year][months[month - 1]]:
                         body[year][months[month - 1]][day] = {}
                     body[year][months[month - 1]
-                               ][day].update({tx[3]: tx[4] * sign})
+                               ][day].update({tx[3]: float(tx[4]) * sign})
                     new_date = datetime.datetime.strptime(
                         str(year) + " " + str(month) + " " + str(day), '%Y %m %d')
                     new_date = new_date + datetime.timedelta(days=days_to_add)
