@@ -305,20 +305,3 @@
 .spinner-inner {
   transform: scale(0.5) !important;
 }
-
-.vdp-datepicker {
-  &.fullscreen-when-on-mobile {
-    @media (max-width: 767px) {
-      position: static;
-      .vdp-datepicker__calendar {
-        position: fixed;
-        top: 50%;
-        left: 5%;
-        margin-top: -25%;
-        width: 90%;
-        z-index: 2000;
-        outline: rgba(0, 0, 0, 0.5) solid 9999px;
-      }
-    }
-  }
-}

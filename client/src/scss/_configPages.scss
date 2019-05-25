@@ -64,7 +64,7 @@
   }
 }
 .itemConfig {
-  height: 85px;
+  height: 44px;
   top: 50%;
   flex: 1 0 30%;
   border: solid 3px black;
@@ -94,16 +94,21 @@
     padding-left: 10px;
     padding-right: 10px;
     &:nth-child(1) {
-      width: 100px;
+      padding-left: 5px;
+      padding-right: 5px;
+      width: 90px;
     }
     &:nth-child(2) {
-      width: 125px;
+      width: 100px;
     }
     &:nth-child(3) {
-      width: calc(100% - 125px - 100px - 100px);
+      width: calc(100% - 90px - 100px - 75px - 70px);
     }
     &:nth-child(4) {
-      width: 100px;
+      width: 75px;
+    }
+    &:nth-child(5) {
+      width: 70px;
     }
     overflow: auto;
     left: 50%;
@@ -121,9 +126,123 @@
       background: transparent;
       outline: none;
       padding-bottom: 1.5px;
+      width: 80px;
 
       &:focus {
         outline: thin dotted;
+      }
+    }
+  }
+}
+.budgetBox {
+  @media screen and (max-width: 400px) {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    margin-top: 20px;
+  }
+  @media screen and (max-width: 530px) {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    margin-top: 20px;
+  }
+  @media screen and (min-width: 531px) {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
+
+.budgetItem {
+  font-weight: 700;
+  top: 50%;
+  border: solid 3px black;
+  background-color: rgba(255, 255, 255, 0.5);
+  @media screen and (max-width: 400px) {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+  @media screen and (max-width: 530px) {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+  @media screen and (min-width: 531px) {
+    box-sizing: border-box;
+    margin: 20px;
+    flex: 1 0 225px;
+    height: 100px;
+    max-width: 225px;
+  }
+  input {
+    margin-bottom: 10px;
+    width: 50%;
+    margin-top: 5px;
+    text-align: center;
+  }
+  a {
+    &:nth-child(1) {
+      margin-right: 10px;
+    }
+  }
+}
+
+.budgetItemAuto {
+  font-weight: 700;
+  top: 50%;
+  border: solid 3px black;
+  background-color: rgba(255, 255, 255, 0.5);
+  @media screen and (max-width: 400px) {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+  @media screen and (max-width: 530px) {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+  @media screen and (min-width: 531px) {
+    box-sizing: border-box;
+    margin: 20px;
+    flex: 1 0 225px;
+    height: auto;
+    max-width: 225px;
+  }
+  input {
+    margin-bottom: 10px;
+    width: 50%;
+    margin-top: 5px;
+    text-align: center;
+  }
+  a {
+    &:nth-child(1) {
+      margin-right: 10px;
+    }
+  }
+}
+
+.vdp-datepicker {
+  &.fullscreen-when-on-mobile {
+    @media (min-width: 768px) {
+      position: static;
+      .vdp-datepicker__calendar {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 50%;
+        z-index: 2000;
+        outline: rgba(0, 0, 0, 0.5) solid 9999px;
+      }
+    }
+    @media (max-width: 767px) {
+      position: static;
+      .vdp-datepicker__calendar {
+        position: fixed;
+        top: 50%;
+        left: 5%;
+        margin-top: -25%;
+        width: 90%;
+        z-index: 2000;
+        outline: rgba(0, 0, 0, 0.5) solid 9999px;
       }
     }
   }

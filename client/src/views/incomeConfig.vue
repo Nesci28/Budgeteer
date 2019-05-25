@@ -28,36 +28,14 @@
               <option>Hebdo</option>
             </select>
           </li>
-          <li v-if="frequence">
-            <select
-              id="day"
-              v-if="frequence == 'Mensuel'"
-              v-model="day"
-              style="background-color:transparent;"
-            >
-              <option disabled value>Jour</option>
-              <option v-for="number in 31" :key="number">{{number}}</option>
-            </select>
-            <select
-              id="day"
-              v-if="frequence == 'Bi-hebdo'"
-              v-model="day"
-              style="background-color:transparent;"
-            >
-              <option disabled value>Jour</option>
-              <option v-for="number in daysBi" :key="number">{{number}}</option>
-            </select>
-            <select
-              id="day"
-              v-if="frequence == 'Hebdo'"
-              v-model="day"
-              style="background-color:transparent;"
-            >
-              <option disabled value>Jour</option>
-              <option v-for="number in days" :key="number">{{number}}</option>
-            </select>
+          <li v-if="frequence" style="width:100px; padding-bottom: 7px;">
+            <datepicker
+              v-model="startDate"
+              class="fullscreen-when-on-mobile"
+              placeholder="Choisir Date"
+            ></datepicker>
           </li>
-          <li v-if="day">
+          <li v-if="startDate">
             <input
               id="commentaire"
               type="text"
@@ -76,20 +54,7 @@
               onkeypress="return event.charCode == 46 || (event.charCode >= 48 && event.charCode <= 57)"
             >
           </li>
-        </ul>
-        <ul>
-          <li v-if="montant" style="width:calc(50% - 50px); padding-bottom: 13px;">
-            <input type="checkbox" v-model="checkboxDate">
-            <label for="checkbox">Maintenant?</label>
-          </li>
-          <li v-if="montant" style="width: calc(50% - 50px); padding-bottom: 9.5px;">
-            <datepicker
-              v-model="startDate"
-              class="fullscreen-when-on-mobile"
-              :disabled="checkboxDate"
-            ></datepicker>
-          </li>
-          <li v-if="montant" style="width: 100px;float: right;">
+          <li v-if="montant" style="float: right;">
             <a @click="add" class="btn btn-success">+</a>
           </li>
         </ul>
@@ -119,31 +84,15 @@ export default {
       urlConfig: "",
       frequence: "",
       day: null,
-      days: [
-        "Dimanche",
-        "Lundi",
-        "Mardi",
-        "Mercredi",
-        "Jeudi",
-        "Vendredi",
-        "Samedi"
-      ],
-      daysBi: [
-        "Dimanche",
-        "Lundi",
-        "Mardi",
-        "Mercredi",
-        "Jeudi",
-        "Vendredi",
-        "Samedi",
-        "Dimanche (2)",
-        "Lundi (2)",
-        "Mardi (2)",
-        "Mercredi (2)",
-        "Jeudi (2)",
-        "Vendredi (2)",
-        "Samedi (2)"
-      ],
+      days: {
+        "1": "Dimanche",
+        "2": "Lundi",
+        "3": "Mardi",
+        "4": "Mercredi",
+        "5": "Jeudi",
+        "6": "Vendredi",
+        "7": "Samedi"
+      },
       months: {
         Jan: "01",
         Feb: "02",
@@ -160,6 +109,7 @@ export default {
       },
       commentaire: "",
       montant: "",
+      event: [],
       events: [],
       startEvents: [],
       checkboxDate: false,
@@ -188,40 +138,40 @@ export default {
         montantElement.style.border = "solid 1px red";
         return;
       }
-      if (this.checkboxDate == true) {
-        let dt = new Date();
-        this.startDate = [
-          dt.getYear().toString(),
-          dt.getMonth(),
-          dt.getDate().toString()
-        ];
+      if (this.frequence == "Bi-hebdo" || this.frequence == "Hebdo") {
+        this.day = this.startDate.getDay() + 1;
+        this.day = this.days[this.day];
       } else {
-        this.startDate = this.startDate.toString().split(" ");
-        this.startDate = [
-          this.startDate[3].toString(),
-          +this.months[this.startDate[1]],
-          +this.startDate[2]
-        ];
+        this.day = this.startDate.toString().split(" ")[2];
       }
-      this.events.push([
+      this.startDate = this.startDate.toString().split(" ");
+      this.startDate = [
+        this.startDate[3].toString(),
+        +this.months[this.startDate[1]],
+        +this.startDate[2]
+      ];
+      this.event = [
         this.events.length,
         this.frequence,
         this.day,
         this.commentaire,
         this.montant,
-        this.date
-      ]);
-      console.log(this.events);
+        this.startDate
+      ];
+      this.events.push(this.event);
+      axios.post(this.urlConfig, {
+        type: "add",
+        transaction: this.event
+      });
     },
     remove(event) {
       let id = this.events.indexOf(event);
       this.events = this.events.filter(function(item) {
         return item !== event;
       });
-    },
-    pushToDb() {
       axios.post(this.urlConfig, {
-        transaction: this.events
+        type: "remove",
+        transaction: event
       });
     }
   },
@@ -242,12 +192,6 @@ export default {
     window.addEventListener("keypress", e => {
       if (e.keyCode == 13) this.add();
     });
-  },
-  beforeRouteUpdate(to, from, next) {
-    this.pushToDb();
-  },
-  beforeDestroy() {
-    this.pushToDb();
   }
 };
 </script>

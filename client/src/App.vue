@@ -14,16 +14,24 @@
             </ul>
           </li>
           <li>
+            <router-link to="/budget">Budget</router-link>
+            <ul>
+              <li>
+                <router-link to="/budget/config">Config</router-link>
+              </li>
+              <li>
+                <router-link to="/budget/dette">Dette</router-link>
+              </li>
+            </ul>
+          </li>
+          <li>
             <router-link to="/account">Revenus</router-link>
             <ul>
               <li>
                 <router-link to="/income/config">Config</router-link>
               </li>
               <li>
-                <router-link to="/income/ajouter">Ajouter</router-link>
-              </li>
-              <li>
-                <router-link to="/income/visuel">Visuel</router-link>
+                <router-link to="/income/add">Ajouter</router-link>
               </li>
             </ul>
           </li>
@@ -34,24 +42,7 @@
                 <router-link to="/outcome/config">Config</router-link>
               </li>
               <li>
-                <router-link to="/outcome/ajouter">Ajouter</router-link>
-              </li>
-              <li>
-                <router-link to="/outcome/visuel">Visuel</router-link>
-              </li>
-            </ul>
-          </li>
-          <li>
-            <router-link to="/dettes">Dettes</router-link>
-            <ul>
-              <li>
-                <router-link to="/dettes/config">Config</router-link>
-              </li>
-              <li>
-                <router-link to="/dettes/ajouter">Ajouter</router-link>
-              </li>
-              <li>
-                <router-link to="/dettes/visuel">Visuel</router-link>
+                <router-link to="/outcome/add">Ajouter</router-link>
               </li>
             </ul>
           </li>

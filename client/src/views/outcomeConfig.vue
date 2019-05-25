@@ -1,5 +1,6 @@
 <template>
   <div>
+    <transition name="fade" mode="out-in"></transition>
     <Hexagon v-if="loading"></Hexagon>
     <div class="configBox">
       <div class="item" v-for="event in events" :key="event[0]">
@@ -27,36 +28,14 @@
               <option>Hebdo</option>
             </select>
           </li>
-          <li v-if="frequence">
-            <select
-              id="day"
-              v-if="frequence == 'Mensuel'"
-              v-model="day"
-              style="background-color:transparent;"
-            >
-              <option disabled value>Jour</option>
-              <option v-for="number in 31" :key="number">{{number}}</option>
-            </select>
-            <select
-              id="day"
-              v-if="frequence == 'Bi-hebdo'"
-              v-model="day"
-              style="background-color:transparent;"
-            >
-              <option disabled value>Jour</option>
-              <option v-for="number in daysBi" :key="number">{{number}}</option>
-            </select>
-            <select
-              id="day"
-              v-if="frequence == 'Hebdo'"
-              v-model="day"
-              style="background-color:transparent;"
-            >
-              <option disabled value>Jour</option>
-              <option v-for="number in days" :key="number">{{number}}</option>
-            </select>
+          <li v-if="frequence" style="width:100px; padding-bottom: 7px;">
+            <datepicker
+              v-model="startDate"
+              class="fullscreen-when-on-mobile"
+              placeholder="Choisir Date"
+            ></datepicker>
           </li>
-          <li v-if="day">
+          <li v-if="startDate">
             <input
               id="commentaire"
               type="text"
@@ -75,12 +54,9 @@
               onkeypress="return event.charCode == 46 || (event.charCode >= 48 && event.charCode <= 57)"
             >
           </li>
-          <a
-            v-if="montant"
-            @click="add"
-            class="btn btn-success"
-            style="float: right; margin-top:3px;margin-right: 5px;"
-          >+</a>
+          <li v-if="montant" style="float: right;">
+            <a @click="add" class="btn btn-success">+</a>
+          </li>
         </ul>
       </div>
     </div>
@@ -95,10 +71,12 @@ axios.defaults.headers = {
   "Content-Type": "application/json"
 };
 import { Hexagon } from "vue-loading-spinner";
+import Datepicker from "vuejs-datepicker";
 
 export default {
   components: {
-    Hexagon
+    Hexagon,
+    Datepicker
   },
   data() {
     return {
@@ -106,40 +84,40 @@ export default {
       urlConfig: "",
       frequence: "",
       day: null,
-      days: [
-        "Dimanche",
-        "Lundi",
-        "Mardi",
-        "Mercredi",
-        "Jeudi",
-        "Vendredi",
-        "Samedi"
-      ],
-      daysBi: [
-        "Dimanche",
-        "Lundi",
-        "Mardi",
-        "Mercredi",
-        "Jeudi",
-        "Vendredi",
-        "Samedi",
-        "Dimanche (2)",
-        "Lundi (2)",
-        "Mardi (2)",
-        "Mercredi (2)",
-        "Jeudi (2)",
-        "Vendredi (2)",
-        "Samedi (2)"
-      ],
+      days: {
+        "1": "Dimanche",
+        "2": "Lundi",
+        "3": "Mardi",
+        "4": "Mercredi",
+        "5": "Jeudi",
+        "6": "Vendredi",
+        "7": "Samedi"
+      },
+      months: {
+        Jan: "01",
+        Feb: "02",
+        Mar: "03",
+        Apr: "04",
+        May: "05",
+        Jun: "06",
+        Jul: "07",
+        Aug: "08",
+        Sep: "09",
+        Oct: "10",
+        Nov: "11",
+        Dec: "12"
+      },
       commentaire: "",
       montant: "",
+      event: [],
       events: [],
-      startEvents: []
+      startEvents: [],
+      checkboxDate: false,
+      startDate: ""
     };
   },
   methods: {
     add() {
-      console.log("add");
       let frequenceElement = document.getElementById("frequence");
       if (!this.frequence && frequenceElement) {
         frequenceElement.style.border = "solid 1px red";
@@ -160,23 +138,40 @@ export default {
         montantElement.style.border = "solid 1px red";
         return;
       }
-      this.events.push([
+      if (this.frequence == "Bi-hebdo" || this.frequence == "Hebdo") {
+        this.day = this.startDate.getDay() + 1;
+        this.day = this.days[this.day];
+      } else {
+        this.day = this.startDate.toString().split(" ")[2];
+      }
+      this.startDate = this.startDate.toString().split(" ");
+      this.startDate = [
+        this.startDate[3].toString(),
+        +this.months[this.startDate[1]],
+        +this.startDate[2]
+      ];
+      this.event = [
         this.events.length,
         this.frequence,
         this.day,
         this.commentaire,
-        this.montant
-      ]);
+        this.montant,
+        this.startDate
+      ];
+      this.events.push(this.event);
+      axios.post(this.urlConfig, {
+        type: "add",
+        transaction: this.event
+      });
     },
     remove(event) {
       let id = this.events.indexOf(event);
       this.events = this.events.filter(function(item) {
         return item !== event;
       });
-    },
-    pushToDb() {
       axios.post(this.urlConfig, {
-        transaction: this.events
+        type: "remove",
+        transaction: event
       });
     }
   },
@@ -197,12 +192,6 @@ export default {
     window.addEventListener("keypress", e => {
       if (e.keyCode == 13) this.add();
     });
-  },
-  beforeRouteUpdate(to, from, next) {
-    this.pushToDb();
-  },
-  beforeDestroy() {
-    this.pushToDb();
   }
 };
 </script>

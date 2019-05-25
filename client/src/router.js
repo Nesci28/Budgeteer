@@ -7,6 +7,9 @@ import settings from "./views/settings";
 import account from "./views/account";
 import incomeConfig from "./views/incomeConfig";
 import outcomeConfig from "./views/outcomeConfig";
+import budgetConfig from "./views/budgetConfig";
+import budget from "./views/budget";
+import outcomeAdd from "./views/outcomeAdd";
 
 Vue.use(Router);
 
@@ -21,6 +24,16 @@ export default new Router({
       path: "/outcome/config",
       name: "outcomeConfig",
       component: outcomeConfig
+    },
+    {
+      path: "/budget/config",
+      name: "budgetConfig",
+      component: budgetConfig
+    },
+    {
+      path: "/outcome/add",
+      name: "outcomeAdd",
+      component: outcomeAdd
     },
     {
       path: "/",
@@ -46,6 +59,11 @@ export default new Router({
       path: "/account",
       name: "account",
       component: account
+    },
+    {
+      path: "/budget",
+      name: "budget",
+      component: budget
     }
   ]
 });
