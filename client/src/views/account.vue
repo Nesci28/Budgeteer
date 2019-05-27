@@ -1,18 +1,22 @@
 <template>
-  <div class="calendar">
-    <vue-cal
-      :disable-views="['years', 'year', 'week', 'day']"
-      default-view="month"
-      events-on-month-view="short"
-      :events="events"
-      class="vuecal--blue-theme"
-      :todayButton="true"
-      @view-change="logEvents($event)"
-    ></vue-cal>
+  <div>
+    <Hexagon v-if="loading"></Hexagon>
+    <div v-if="!loading" class="calendar">
+      <vue-cal
+        :disable-views="['years', 'year', 'week', 'day']"
+        default-view="month"
+        events-on-month-view="short"
+        :events="events"
+        class="vuecal--blue-theme"
+        :todayButton="true"
+        @view-change="logEvents($event)"
+      ></vue-cal>
+    </div>
   </div>
 </template>
 
 <script>
+import { Hexagon } from "vue-loading-spinner";
 import VueCal from "vue-cal";
 import "vue-cal/dist/vuecal.css";
 const axios = require("axios");
@@ -22,9 +26,10 @@ axios.defaults.headers = {
 };
 
 export default {
-  components: { VueCal },
+  components: { Hexagon, VueCal },
   data() {
     return {
+      loading: true,
       budget: null,
       monthBudget: null,
       events: [],
@@ -69,8 +74,7 @@ export default {
           let budgetDayKeys = Object.keys(budgetDay);
           budgetDayKeys.forEach(tx => {
             tx = budgetDay[tx];
-
-            if (Object.values(budgetDay[0])[0] > 0) {
+            if (Object.values(tx)[1] > 0) {
               var moneyClass = "income";
             } else {
               var moneyClass = "outcome";
@@ -83,8 +87,11 @@ export default {
                 2,
                 "0"
               )}`,
-              title: Object.keys(tx)[0] + " " + Object.values(tx)[0],
-              content: Object.values(tx)[0],
+              title:
+                [...Object.values(tx)[0]].splice(0, 9).join("") +
+                " " +
+                Object.values(tx)[1],
+              content: Object.values(tx)[0] + " " + Object.values(tx)[1],
               class: moneyClass
             });
           });
@@ -103,7 +110,8 @@ export default {
     }
     this.budget = await axios.get(this.urlBudget);
     this.budget = this.budget.data.message;
-    this.getMonthBudget(this.getYear(), this.getMonth() + 1);
+    await this.getMonthBudget(this.getYear(), this.getMonth() + 1);
+    this.loading = false;
   }
 };
 </script>

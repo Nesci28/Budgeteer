@@ -2,34 +2,36 @@
   <div>
     <transition name="fade" mode="out-in"></transition>
     <Hexagon v-if="loading"></Hexagon>
-    <div class="budget">
-      <select
-        id="mois"
-        style="margin-right:10px;height:20px;font-size: 16px;background-color:transparent;"
-        v-model="currentMonth"
-      >
-        <option v-for="month in months" :key="month">{{month}}</option>
-      </select>
-      <select
-        id="annee"
-        style="margin-right:20px;height:20px;font-size: 16px;background-color:transparent;"
-        v-model="currentYear"
-      >
-        <option v-for="year in years" :key="year">{{year}}</option>
-      </select>
-      <a @click="loadMonth(currentMonth, currentYear)" class="btn btn-primary">Go</a>
-    </div>
-    <div class="budgetBox">
-      <div class="budgetItemAuto" v-for="budget in monthBudget" :key="budget.title">
-        <h1
-          style="text-transform: capitalize;font-size: 22px;margin-top: 10px;margin-bottom: 10px;"
-        >{{budget.title}}</h1>
-        <h1 style="width:100%; border-bottom:1px solid black;">{{budget.value}}</h1>
-        <h3
-          style="border-bottom: 1px dotted black;"
-        >Dernier mois: {{ getLastMonthResult(budget.title) }}</h3>
-        <h3>Tx du mois:</h3>
-        <h3 v-for="tx in getMonthTx(budget.title)" :key="tx">{{ tx }}</h3>
+    <div v-if="!loading">
+      <div class="budget">
+        <select
+          id="mois"
+          style="margin-right:10px;height:20px;font-size: 16px;background-color:transparent;"
+          v-model="currentMonth"
+        >
+          <option v-for="month in months" :key="month">{{month}}</option>
+        </select>
+        <select
+          id="annee"
+          style="margin-right:20px;height:20px;font-size: 16px;background-color:transparent;"
+          v-model="currentYear"
+        >
+          <option v-for="year in years" :key="year">{{year}}</option>
+        </select>
+        <a @click="loadMonth(currentMonth, currentYear)" class="btn btn-primary">Go</a>
+      </div>
+      <div class="budgetBox">
+        <div class="budgetItemAuto" v-for="budget in monthBudget" :key="budget.title">
+          <h1
+            style="text-transform: capitalize;font-size: 22px;margin-top: 10px;margin-bottom: 10px;"
+          >{{budget.title}}</h1>
+          <h1 style="width:100%; border-bottom:1px solid black;">{{budget.value}}</h1>
+          <h3
+            style="border-bottom: 1px dotted black;"
+          >Dernier mois: {{ getLastMonthResult(budget.title) }}</h3>
+          <h3>Tx du mois:</h3>
+          <h3 v-for="tx in getMonthTx(budget.title)" :key="tx">{{ tx }}</h3>
+        </div>
       </div>
     </div>
   </div>
@@ -72,7 +74,8 @@ export default {
         "novembre",
         "decembre"
       ],
-      years: []
+      years: [],
+      semaines: []
     };
   },
   methods: {
@@ -105,12 +108,12 @@ export default {
       return [0];
     },
     async loadMonth(month, year) {
-      console.log(this.months.indexOf(month), year);
       this.budgets = await axios.post(this.urlBudget, {
         month: this.months.indexOf(month),
         year: year
       });
       this.budgets = this.budgets.data.message;
+      console.log(this.budgets);
       this.monthBudget = this.budgets["month_budget"];
     }
   },
@@ -129,7 +132,6 @@ export default {
       year: this.currentYear
     });
     this.budgets = this.budgets.data.message;
-    console.log(this.budgets);
     this.monthBudget = this.budgets["month_budget"];
     this.loading = false;
   }

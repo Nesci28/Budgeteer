@@ -2,7 +2,7 @@
   <div>
     <transition name="fade" mode="out-in"></transition>
     <Hexagon v-if="loading"></Hexagon>
-    <div class="budgetBox">
+    <div v-if="!loading" class="budgetBox">
       <div class="budgetItem" v-for="(budget, index) in budgets" :key="budget.title">
         <h3>{{budget.title}}</h3>
         <input type="text" placeholder="montant" v-model="budget.value">

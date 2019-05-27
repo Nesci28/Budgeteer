@@ -2,7 +2,7 @@
   <div>
     <transition name="fade" mode="out-in"></transition>
     <Hexagon v-if="loading"></Hexagon>
-    <div class="configBox">
+    <div v-if="!loading" class="configBox">
       <div class="item" v-for="event in events" :key="event[0]">
         <ul style="text-align: center;">
           <li>{{event[1]}}</li>
@@ -163,6 +163,10 @@ export default {
         type: "add",
         transaction: this.event
       });
+      this.startDate = "";
+      this.comment = "";
+      this.montant = "";
+      this.frequence = "";
     },
     remove(event) {
       let id = this.events.indexOf(event);

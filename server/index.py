@@ -201,7 +201,6 @@ def get_budget():
     year = body['year']
     month_budget = calcul_monthly(month, year)
     return jsonify({"message": {
-        'config': month_budget['config'],
         'last_month': month_budget['last_month'],
         'tx_month': month_budget['tx_month'],
         'month_budget': month_budget['month_budget']
@@ -231,7 +230,7 @@ def add_tx():
     users = mongo.db.budgeteer
     query = {}
     query['history.' + str(body['year']) + "." + months[body['month']] +
-          "." + str(body['day'])] = {body['title']: float(body['value'])}
+          "." + str(body['day'])] = {"title": body['title'], "value": float(body['value'])}
     users.find_one_and_update({
         "username": session['username']
     }, {
@@ -254,60 +253,42 @@ def calcul_monthly(month, year):
     last_month = months[last_month]
 
     # Getting the budget configurations
-    budget = user['config']['budget']
+    budget_configs = user['config']['budget']
+    last_month_tx = user['budget'][str(year)][last_month]
+    current_month_tx = user['history'][str(year)][months[month]]
 
     # Calculate the results of last month only if the last month is  completely passed
     today = datetime.datetime.today()
     current_month = today.month
-    if last_month == [] and month + 1 == current_month:
+    if last_month_tx == [] and month + 1 == current_month:
         last_month_tx = calculate_last_month(year, month - 1)
-    else:
-        last_month_tx = user['budget'][str(year)][last_month]
 
     # Updating the budget values with the last month values
-    # res = []
-    for budget_config in budget:
-        # res.append("title": budget_config['title'], "value": budget['value'])
-        print(last_month_tx)
+    # last_month_tx == resuls of the last month budgets
+    # budget_configs == budget base configurations
+    for budget in budget_configs:
         for tx in last_month_tx:
-            print(tx)
-            if budget_config['title'] == tx['title']:
-                budget_config['value'] = budget_config['value'] + tx['value']
-    print(budget)
+            if budget['title'] == tx['title']:
+                budget['value'] = float(budget['value']) + float(tx['value'])
 
-
-
-    month = months[month]
-    current_month = user['history'][str(year)][month]
-
-    # Updating the month budget + whats left from the last month
-    # print(last_month)
-    # for el_last_month in last_month:
-    #     el_last_month = last_month[el_last_month]
-    #     for el_each_day in el_last_month:
-    #         for el in month_budget:
-    #             if el_each_day['title'] == el['title']:
-    #                 el['value'] = el['value'] + el_last_month['value']
-    #                 last_month_result.append(
-    #                     {el['title']: el_each_day['value']})
+    month_budget = budget_configs
 
     # Updating the budget by going through each day of the month
-    # last_month = last_month_result
-    # tx_this_month = []
-    # print(current_month)
-    # for el_current_month in current_month:
-    #     print(el_current_month)
-    #     for el in month_budget:
-    #         if el_current_month['title'] == el['title']:
-    #             el['value'] = el['value'] - el_current_month['value'][1]
-    #             tx_this_month.append({el['title']: el_current_month['value']})
-    # total = month_budget
+    # current_month_tx == current month transactions dict with list for each day
+    # month_budget == the result of the configs budget - the leftovers from last month in a list
+    for budget in month_budget:
+        for tx in current_month_tx:
+            tx = current_month_tx[tx]
+            if len(tx) > 0:
+                for each_tx in tx:
+                    if budget['title'] == each_tx.get('title'):
+                        budget['value'] = budget['value'] - \
+                            each_tx['value']
 
     return {
-        'config': budget
-        # 'last_month': last_month,
-        # 'tx_month': tx_this_month,
-        # 'month_budget': total
+        'last_month': last_month_tx,
+        'tx_month': current_month_tx,
+        'month_budget': month_budget
     }
 
 
@@ -394,7 +375,8 @@ def add_transaction(type, users, body):
     current_db_body = users.find_one({"username": session['username']})
     current_db_body = current_db_body['history']
     for tx in updated_db_body:
-        current_db_body[tx[0]][tx[1]][str(int(tx[2]))].append({tx[3]: tx[4]})
+        current_db_body[tx[0]][tx[1]][str(int(tx[2]))].append(
+            {"title": tx[3], "value": tx[4]})
     users.find_one_and_update({"username": session['username']}, {
         '$set': {
             'history': current_db_body
@@ -408,12 +390,14 @@ def remove_transaction(type, users, body):
     list_of_tx = create_transactions(type, body['transaction'])
     current_db_body = users.find_one({"username": session['username']})
     current_db_body = current_db_body['history']
+    print(list_of_tx)
     for tx in list_of_tx:
         new_date = datetime.datetime.strptime(
             str(tx[0]) + " " + str(months.index(tx[1]) + 1) + " " + str(tx[2]), '%Y %m %d')
-        if datetime.datetime.today() >= new_date:
+        if datetime.datetime.today() <= new_date:
             current_db_body[tx[0]][tx[1]][str(
-                int(tx[2]))].remove({tx[3]: tx[4]})
+                int(tx[2]))].remove({"title": tx[3], "value": tx[4]})
+
     users.find_one_and_update({"username": session['username']}, {
         '$set': {
             'history': current_db_body

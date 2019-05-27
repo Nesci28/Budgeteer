@@ -2,7 +2,7 @@
   <div>
     <transition name="fade" mode="out-in"></transition>
     <Hexagon v-if="loading"></Hexagon>
-    <div class="configBox">
+    <div v-if="!loading" class="configBox">
       <div style="height: auto; padding:20px;" class="item">
         <div id="radioBox" style="display: flex;flex-direction: row;flex-wrap: wrap;">
           <div style v-for="title in titles" :key="title">
