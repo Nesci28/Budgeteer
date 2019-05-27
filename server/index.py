@@ -220,48 +220,122 @@ def get_type():
     return jsonify({"message": titles})
 
 
+@app.route('/addTx', methods=["POST"])
+@cross_origin(supports_credentials=True)
+@login_required
+def add_tx():
+    months = ['janvier', 'fevrier', 'mars', 'avril', 'mai', 'juin',
+              'juillet', 'aout', 'septembre', 'octobre', 'novembre', 'decembre']
+    body = request.get_json()
+    print(body)
+    users = mongo.db.budgeteer
+    query = {}
+    query['history.' + str(body['year']) + "." + months[body['month']] +
+          "." + str(body['day'])] = {body['title']: float(body['value'])}
+    users.find_one_and_update({
+        "username": session['username']
+    }, {
+        '$push': query
+    })
+    return jsonify({"message": 'tx added'})
+
+
 def calcul_monthly(month, year):
-    year = str(year)
     months = ['janvier', 'fevrier', 'mars', 'avril', 'mai', 'juin',
               'juillet', 'aout', 'septembre', 'octobre', 'novembre', 'decembre']
     users = mongo.db.budgeteer
     user = users.find_one({"username": session['username']})
-    month_budget = []
     last_month = None
     if month == 0:
         year = str(int(year) - 1)
         last_month = 11
     if last_month == None:
         last_month = month - 1
-    month = months[month]
     last_month = months[last_month]
+
+    # Getting the budget configurations
     budget = user['config']['budget']
-    last_month = user['budget'][year][last_month]
-    current_month = user['budget'][year][month]
-    for el in budget:
-        month_budget.append({"title": el['title'], "value": el['value']})
-    config = month_budget
-    last_month_result = []
-    for el_last_month in last_month:
-        for el in month_budget:
-            if el_last_month['title'] == el['title']:
-                el['value'] = el['value'] + el_last_month['value']
-                last_month_result.append({el['title']: el_last_month['value']})
-    last_month = last_month_result
-    tx_this_month = []
-    for el_current_month in current_month:
-        print(el_current_month)
-        for el in month_budget:
-            if el_current_month['title'] == el['title']:
-                el['value'] = el['value'] - el_current_month['value'][1]
-                tx_this_month.append({el['title']: el_current_month['value']})
-    total = month_budget
+
+    # Calculate the results of last month only if the last month is  completely passed
+    today = datetime.datetime.today()
+    current_month = today.month
+    if last_month == [] and month + 1 == current_month:
+        last_month_tx = calculate_last_month(year, month - 1)
+    else:
+        last_month_tx = user['budget'][str(year)][last_month]
+
+    # Updating the budget values with the last month values
+    # res = []
+    for budget_config in budget:
+        # res.append("title": budget_config['title'], "value": budget['value'])
+        print(last_month_tx)
+        for tx in last_month_tx:
+            print(tx)
+            if budget_config['title'] == tx['title']:
+                budget_config['value'] = budget_config['value'] + tx['value']
+    print(budget)
+
+
+
+    month = months[month]
+    current_month = user['history'][str(year)][month]
+
+    # Updating the month budget + whats left from the last month
+    # print(last_month)
+    # for el_last_month in last_month:
+    #     el_last_month = last_month[el_last_month]
+    #     for el_each_day in el_last_month:
+    #         for el in month_budget:
+    #             if el_each_day['title'] == el['title']:
+    #                 el['value'] = el['value'] + el_last_month['value']
+    #                 last_month_result.append(
+    #                     {el['title']: el_each_day['value']})
+
+    # Updating the budget by going through each day of the month
+    # last_month = last_month_result
+    # tx_this_month = []
+    # print(current_month)
+    # for el_current_month in current_month:
+    #     print(el_current_month)
+    #     for el in month_budget:
+    #         if el_current_month['title'] == el['title']:
+    #             el['value'] = el['value'] - el_current_month['value'][1]
+    #             tx_this_month.append({el['title']: el_current_month['value']})
+    # total = month_budget
+
     return {
-        'config': config,
-        'last_month': last_month,
-        'tx_month': tx_this_month,
-        'month_budget': total
+        'config': budget
+        # 'last_month': last_month,
+        # 'tx_month': tx_this_month,
+        # 'month_budget': total
     }
+
+
+def calculate_last_month(year, last_month):
+    months = ['janvier', 'fevrier', 'mars', 'avril', 'mai', 'juin',
+              'juillet', 'aout', 'septembre', 'octobre', 'novembre', 'decembre']
+    users = mongo.db.budgeteer
+    db = users.find_one({"username": session['username']})
+    configs = db['config']['budget']
+    last_month_tx = db['history'][str(year)][months[last_month]]
+    res = []
+    for config in configs:
+        default_value = config['value']
+        res.append({"title": config['title'], "value": config['value']})
+        for tx in last_month_tx:
+            tx = last_month_tx[tx]
+            if tx != []:
+                if config['title'] == tx['title']:
+                    res[-1]['value'] = res[-1]['value'] - tx['value']
+        if res[-1]['value'] == default_value:
+            res[-1]['value'] = 0
+
+    query = {}
+    query['budget.' + str(year) + '.' + months[last_month]] = res
+    users.find_one_and_update({"username": session['username']}, {
+        '$set': query
+    })
+    return res
 
 
 def check_recalculation():

@@ -62,6 +62,13 @@
       border-right: solid 1px black;
     }
   }
+  .datepicker {
+    input {
+      margin-top: 10px;
+      width: 100% !important;
+      margin-bottom: 20px;
+    }
+  }
 }
 .itemConfig {
   height: 44px;

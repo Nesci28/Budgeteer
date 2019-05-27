@@ -3,11 +3,33 @@
     <transition name="fade" mode="out-in"></transition>
     <Hexagon v-if="loading"></Hexagon>
     <div class="configBox">
-      <div class="item">
-        <div style="float: left;" v-for="title in titles" :key="title">
-          <input type="radio" id="one">
-          <label for="one">{{ title }}</label>
+      <div style="height: auto; padding:20px;" class="item">
+        <div id="radioBox" style="display: flex;flex-direction: row;flex-wrap: wrap;">
+          <div style v-for="title in titles" :key="title">
+            <input
+              style="margin:5px; margin-left:20px;"
+              type="radio"
+              :value="title"
+              name="title"
+              v-model="radioBox"
+            >
+            <label style="text-transform:capitalize;" :for="title">{{ title }}</label>
+          </div>
         </div>
+        <datepicker
+          id="date"
+          v-model="addDate"
+          class="fullscreen-when-on-mobile datepicker"
+          placeholder="Choisir Date"
+        ></datepicker>
+        <input
+          id="montant"
+          style="float: left;"
+          type="text"
+          placeholder="montant"
+          v-model="montant"
+        >
+        <a @click="add" class="btn btn-primary">Ajouter</a>
       </div>
     </div>
   </div>
@@ -29,23 +51,64 @@ export default {
   },
   data() {
     return {
+      urlConfig: null,
+      urlAddTx: null,
       loading: true,
-      titles: []
+      titles: [],
+      addDate: null,
+      radioBox: null,
+      montant: null
     };
   },
-  methods: {},
+  methods: {
+    async add() {
+      const radioBoxElement = document.getElementById("radioBox");
+      const dateElement = document.getElementById("date");
+      const montantElement = document.getElementById("montant");
+      radioBoxElement.style.border = "none";
+      dateElement.style.border = "none";
+      montantElement.style.border = "none";
+      if (!this.radioBox) radioBoxElement.style.border = "1px solid red";
+      if (!this.addDate) dateElement.style.border = "1px solid red";
+      if (!this.montant) montantElement.style.border = "1px solid red";
+      if (this.radioBox && this.addDate && this.montant) {
+        const year = this.addDate.getFullYear();
+        const month = this.addDate.getMonth();
+        const day = this.addDate.getDate();
+        console.log(year, month, day);
+        let res = await axios.post(this.urlAddTx, {
+          year,
+          month,
+          day,
+          title: this.radioBox,
+          value: this.montant
+        });
+        res = res.data.message;
+        if (res == "tx added") {
+        }
+      }
+    }
+  },
   async mounted() {
     if (window.location.href.includes("localhost")) {
       this.urlConfig = "http://localhost:5000/getType";
+      this.urlAddTx = "http://localhost:5000/addTx";
     } else if (window.location.href.includes("192.168")) {
       this.urlConfig = "http://192.168.0.127:5000/getType";
+      this.urlAddTx = "http://192.168.0.127:5000/addTx";
     } else {
       this.urlConfig = "https://nos-server.now.sh/getType";
+      this.urlAddTx = "https://nos-server.now.sh/addTx";
     }
     this.titles = await axios.get(this.urlConfig);
     this.titles = this.titles.data.message;
     console.log(this.titles);
     this.loading = false;
+  },
+  created() {
+    window.addEventListener("keypress", e => {
+      if (e.keyCode == 13) this.add();
+    });
   }
 };
 </script>
