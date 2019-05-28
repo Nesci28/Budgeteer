@@ -3,10 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "start": "serve -n dist",
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "build": "npm install && vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "start": "serve -n dist"
+    "deploy": "npm run build && now --public && now alias budgeteer"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.18",
@@ -18,6 +19,7 @@
     "animate.css": "^3.7.0",
     "axios": "^0.18.0",
     "core-js": "^2.6.5",
+    "serve": "^11.0.0",
     "v-calendar-scheduler": "^0.7.4",
     "vue": "^2.6.10",
     "vue-cal": "^1.58.0",

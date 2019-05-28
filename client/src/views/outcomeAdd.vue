@@ -97,8 +97,8 @@ export default {
       this.urlConfig = "http://192.168.0.127:5000/getType";
       this.urlAddTx = "http://192.168.0.127:5000/addTx";
     } else {
-      this.urlConfig = "https://nos-server.now.sh/getType";
-      this.urlAddTx = "https://nos-server.now.sh/addTx";
+      this.urlConfig = "https://budgeteer-server.now.sh/getType";
+      this.urlAddTx = "https://budgeteer-server.now.sh/addTx";
     }
     this.titles = await axios.get(this.urlConfig);
     this.titles = this.titles.data.message;

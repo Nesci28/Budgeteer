@@ -123,7 +123,7 @@ export default {
     } else if (window.location.href.includes("192.168")) {
       this.urlBudget = "http://192.168.0.127:5000/budget";
     } else {
-      this.urlBudget = "https://nos-server.now.sh/budget";
+      this.urlBudget = "https://budgeteer-server.now.sh/budget";
     }
     this.getCurrentMonth();
     this.getCurrentYear();

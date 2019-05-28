@@ -47,6 +47,7 @@ axios.defaults.withCredentials = true;
 axios.defaults.headers = {
   "Content-Type": "application/json"
 };
+axios.defaults.crossDomain = true;
 
 export default {
   data() {
@@ -73,6 +74,7 @@ export default {
           username: this.username.toString(),
           password: this.password.toString()
         });
+        console.log(res);
         if (res.data.message == "logged in") {
           this.$store.state.loggedIn = true;
           this.$router.push("/account");
@@ -97,6 +99,7 @@ export default {
     },
     async checkLogin() {
       let res = await axios.get(this.urlLogin);
+      console.log(res);
       if (res.data.message == "logged in") {
         this.$store.state.loggedIn = true;
         this.$router.push("/account");
@@ -107,9 +110,9 @@ export default {
     if (window.location.href.includes("localhost")) {
       this.urlLogin = "http://localhost:5000/login";
     } else if (window.location.href.includes("192.168")) {
-      this.urlLogin = "http://192.168.0.127:5000/login/";
+      this.urlLogin = "http://192.168.0.127:5000/login";
     } else {
-      this.urlLogin = "https://nos-server.now.sh/login/";
+      this.urlLogin = "https://budgeteer-server.now.sh/login";
     }
     if (!localStorage["background"]) {
       localStorage["background"] = "wallpaper1.jpg";

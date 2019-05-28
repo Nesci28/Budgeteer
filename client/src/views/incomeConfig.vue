@@ -185,7 +185,7 @@ export default {
     } else if (window.location.href.includes("192.168")) {
       this.urlConfig = "http://192.168.0.127:5000/config/income";
     } else {
-      this.urlConfig = "https://nos-server.now.sh/config/income";
+      this.urlConfig = "https://budgeteer-server.now.sh/config/income";
     }
     this.events = await axios.get(this.urlConfig);
     this.events = this.events.data.message;

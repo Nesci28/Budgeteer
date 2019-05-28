@@ -125,9 +125,9 @@ export default {
     if (window.location.href.includes("localhost")) {
       this.urlRegister = "http://localhost:5000/register";
     } else if (window.location.href.includes("192.168")) {
-      this.urlRegister = "http://192.168.0.127:5000/register/";
+      this.urlRegister = "http://192.168.0.127:5000/register";
     } else {
-      this.urlRegister = "https://nos-server.now.sh/register/";
+      this.urlRegister = "https://budgeteer-server.now.sh/register";
     }
     if (!localStorage["background"]) {
       localStorage["background"] = "wallpaper1.jpg";

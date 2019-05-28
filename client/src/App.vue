@@ -206,11 +206,11 @@ export default {
       this.urlLogin = "http://localhost:5000/login";
       this.urlLogout = "http://localhost:5000/logout";
     } else if (window.location.href.includes("192.168")) {
-      this.urlLogin = "http://192.168.0.127:5000/login/";
-      this.urlLogout = "http://192.168.0.127:5000/logout/";
+      this.urlLogin = "http://192.168.0.127:5000/login";
+      this.urlLogout = "http://192.168.0.127:5000/logout";
     } else {
-      this.urlLogin = "https://nos-server.now.sh/login/";
-      this.urlLogout = "https://nos-server.now.sh/logout/";
+      this.urlLogin = "https://budgeteer-server.now.sh/login";
+      this.urlLogout = "https://budgeteer-server.now.sh/logout";
     }
     if (!localStorage["background"]) {
       localStorage["background"] = "wallpaper1.jpg";
