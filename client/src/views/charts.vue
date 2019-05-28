@@ -3,7 +3,7 @@
     <transition name="fade" mode="out-in"></transition>
     <Hexagon v-if="loading"></Hexagon>
     <div v-if="!loading">
-      <div class="budget">
+      <div class="budget" style="margin-bottom: 20px;">
         <select
           id="mois"
           style="margin-right:10px;height:20px;font-size: 16px;background-color:transparent;"
@@ -20,18 +20,15 @@
         </select>
         <a @click="loadMonth(currentMonth, currentYear)" class="btn btn-primary">Go</a>
       </div>
-      <div class="budgetBox">
-        <div class="budgetItemAuto" v-for="budget in monthBudget" :key="budget.title">
-          <h1
-            style="text-transform: capitalize;font-size: 22px;margin-top: 10px;margin-bottom: 10px;"
-          >{{budget.title}}</h1>
-          <h1 style="width:100%; border-bottom:1px solid black;">{{budget.value}}</h1>
-          <h3
-            style="border-bottom: 1px dotted black;"
-          >Dernier mois: {{ getLastMonthResult(budget.title) }}</h3>
-          <h3>Tx du mois:</h3>
-          <h4 v-for="tx in getMonthTx(budget.title)" :key="tx[0]">{{ tx.join(' - ') }}$</h4>
-        </div>
+      <div class="card" style="margin: 5px;">
+        <chartjs-line
+          v-bind:beginzero="beginZero"
+          v-bind:bind="true"
+          v-bind:bordercolor="borderColor"
+          v-bind:data="data['month']"
+          v-bind:datalabel="dataLabel"
+          v-bind:labels="labels['month']"
+        />
       </div>
     </div>
   </div>
@@ -51,14 +48,16 @@ export default {
   },
   data() {
     return {
-      loading: true,
-      urlBudget: "",
-      budgets: null,
-      monthBudget: null,
-      mois: "",
-      annee: "",
+      beginZero: true,
+      borderColor: "#4591a8",
+      data: {
+        month: []
+      },
+      dataLabel: "Fluctuation",
+      labels: {
+        month: [8, 10, 12, 14, 16]
+      },
       currentMonth: null,
-      currentMonthInt: null,
       currentYear: null,
       months: [
         "janvier",
@@ -74,7 +73,10 @@ export default {
         "novembre",
         "decembre"
       ],
-      years: []
+      years: [],
+      history: null,
+      budgets: null,
+      loading: true
     };
   },
   methods: {
@@ -90,45 +92,35 @@ export default {
         this.years.push((this.currentYear + i).toString());
       }
     },
-    getLastMonthResult(title) {
-      for (let i = 0; i < this.budgets["last_month"].length; i++) {
-        if (this.budgets["last_month"][i]["title"] == title) {
-          return this.budgets["last_month"][i]["value"];
-        }
-      }
-      return 0;
-    },
-    getMonthTx(title) {
-      const resTx = [];
-      for (let i = 1; i < Object.keys(this.budgets["tx_month"]).length; i++) {
-        if (this.budgets["tx_month"][i.toString()].length > 0) {
-          for (
-            let j = 0;
-            j < this.budgets["tx_month"][i.toString()].length;
-            j++
-          ) {
-            if (
-              this.budgets["tx_month"][i.toString()][j][
-                "title"
-              ].toLowerCase() == title.toLowerCase()
-            ) {
-              resTx.push([
-                i.toString(),
-                this.budgets["tx_month"][i.toString()][j]["value"]
-              ]);
-            }
-          }
-        }
-      }
-      return resTx.length > 0 ? resTx : [0];
-    },
     async loadMonth(month, year) {
       this.budgets = await axios.post(this.urlBudget, {
         month: this.months.indexOf(month),
         year: year
       });
       this.budgets = this.budgets.data.message;
-      this.monthBudget = this.budgets["month_budget"];
+      this.history = this.budgets["tx_month"];
+      this.data.month = [];
+      this.labels.month = [];
+      this.renderChart();
+    },
+    renderChart() {
+      Object.keys(this.history).forEach(day => {
+        if (this.history[day].length > 0) {
+          var valueToAdd = 0;
+          this.history[day].forEach(tx => {
+            if (tx.hasOwnProperty("type")) {
+              valueToAdd = valueToAdd + tx["value"] * -1;
+            } else {
+              valueToAdd = valueToAdd + tx["value"];
+            }
+          });
+        }
+        let sum = day == 1 ? 0 : this.data.month[this.data.month.length - 1];
+        if (valueToAdd) sum = sum + valueToAdd;
+        this.data.month.push(sum);
+        this.labels.month.push(day);
+      });
+      this.loading = false;
     }
   },
   async mounted() {
@@ -146,17 +138,14 @@ export default {
       year: this.currentYear
     });
     this.budgets = this.budgets.data.message;
-    this.monthBudget = this.budgets["month_budget"];
-    this.loading = false;
+    this.history = this.budgets["tx_month"];
+    this.renderChart();
   }
 };
 </script>
 
-<style lang='scss'>
-.budget {
-  select {
-    background-color: rgba(255, 255, 255, 0.5) !important;
-    color: black;
-  }
+<style lang="scss">
+.chartjs-render-monitor {
+  background-color: rgba(255, 255, 255, 0.5);
 }
 </style>

@@ -74,7 +74,6 @@ export default {
           username: this.username.toString(),
           password: this.password.toString()
         });
-        console.log(res);
         if (res.data.message == "logged in") {
           this.$store.state.loggedIn = true;
           this.$router.push("/account");
@@ -99,7 +98,6 @@ export default {
     },
     async checkLogin() {
       let res = await axios.get(this.urlLogin);
-      console.log(res);
       if (res.data.message == "logged in") {
         this.$store.state.loggedIn = true;
         this.$router.push("/account");

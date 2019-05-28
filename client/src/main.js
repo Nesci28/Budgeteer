@@ -3,7 +3,10 @@ import App from "./App.vue";
 import router from "./router";
 import { store } from "./store";
 import "@fortawesome/fontawesome-free/css/all.css";
+import "chart.js";
+import "hchs-vue-charts";
 
+Vue.use(window.VueCharts);
 Vue.config.productionTip = false;
 
 new Vue({

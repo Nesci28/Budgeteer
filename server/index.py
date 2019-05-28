@@ -19,19 +19,12 @@ load_dotenv(dotenv_path=env_path)
 
 # Start the flask App
 app = Flask(__name__)
-if str(sys.argv[0] == 'local'):
-    app.secret_key = os.getenv("APP_SECRET")
-else:
-    app.secret_key = os.environ['APP_SECRET']
+app.secret_key = os.environ['APP_SECRET']
 CORS(app, supports_credentials=True)
 
 # Setup the DB
-if str(sys.argv[0]) == 'local':
-    app.config['MONGODBNAME'] = os.getenv("DB_HOST")
-    app.config['MONGO_URI'] = os.getenv("DB_URL")
-else:
-    app.config['MONGODBNAME'] = os.environ['DB_HOST']
-    app.config['MONGO_URI'] = os.environ['DB_URL']
+app.config['MONGODBNAME'] = os.environ['DB_HOST']
+app.config['MONGO_URI'] = os.environ['DB_URL']
 mongo = PyMongo(app)
 
 
@@ -130,7 +123,7 @@ def signup():
 def get_account(year):
     users = mongo.db.budgeteer
     user = users.find_one({"username": session['username']})
-    return jsonify({"message": user['history'][year]})
+    return jsonify({"message": user['history'][str(year)]})
 
 
 @app.route('/config/<type>', methods=["GET"])
@@ -226,11 +219,10 @@ def add_tx():
     months = ['janvier', 'fevrier', 'mars', 'avril', 'mai', 'juin',
               'juillet', 'aout', 'septembre', 'octobre', 'novembre', 'decembre']
     body = request.get_json()
-    print(body)
     users = mongo.db.budgeteer
     query = {}
     query['history.' + str(body['year']) + "." + months[body['month']] +
-          "." + str(body['day'])] = {"title": body['title'], "value": float(body['value'])}
+          "." + str(body['day'])] = {"title": body['title'], "value": float(body['value']), "type": "budget"}
     users.find_one_and_update({
         "username": session['username']
     }, {
@@ -336,7 +328,6 @@ def check_recalculation():
         income_tx = current_db['config']['income']
         for tx in income_tx:
             updated_db_body = create_transactions('income', tx)
-            print(updated_db_body)
             for el in updated_db_body:
                 if el[0] == str(year):
                     db_body[el[0]][el[1]][el[2]].append({el[3]: el[4] * 1})
@@ -390,7 +381,6 @@ def remove_transaction(type, users, body):
     list_of_tx = create_transactions(type, body['transaction'])
     current_db_body = users.find_one({"username": session['username']})
     current_db_body = current_db_body['history']
-    print(list_of_tx)
     for tx in list_of_tx:
         new_date = datetime.datetime.strptime(
             str(tx[0]) + " " + str(months.index(tx[1]) + 1) + " " + str(tx[2]), '%Y %m %d')

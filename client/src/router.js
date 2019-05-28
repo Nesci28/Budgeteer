@@ -10,6 +10,8 @@ import outcomeConfig from "./views/outcomeConfig";
 import budgetConfig from "./views/budgetConfig";
 import budget from "./views/budget";
 import outcomeAdd from "./views/outcomeAdd";
+import incomeAdd from "./views/incomeAdd";
+import charts from "./views/charts";
 
 Vue.use(Router);
 
@@ -29,6 +31,11 @@ export default new Router({
       path: "/budget/config",
       name: "budgetConfig",
       component: budgetConfig
+    },
+    {
+      path: "/income/add",
+      name: "incomeAdd",
+      component: incomeAdd
     },
     {
       path: "/outcome/add",
@@ -64,6 +71,11 @@ export default new Router({
       path: "/budget",
       name: "budget",
       component: budget
+    },
+    {
+      path: "/charts",
+      name: "charts",
+      component: charts
     }
   ]
 });

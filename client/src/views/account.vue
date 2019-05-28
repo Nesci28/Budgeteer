@@ -74,11 +74,20 @@ export default {
           let budgetDayKeys = Object.keys(budgetDay);
           budgetDayKeys.forEach(tx => {
             tx = budgetDay[tx];
-            if (Object.values(tx)[1] > 0) {
-              var moneyClass = "income";
+            console.log(tx);
+            if (tx.hasOwnProperty("type")) {
+              var moneyClass = "depense";
             } else {
-              var moneyClass = "outcome";
+              if (Object.values(tx)[1] > 0) {
+                var moneyClass = "income";
+              } else {
+                var moneyClass = "outcome";
+              }
             }
+            const value =
+              moneyClass == "budget"
+                ? Object.values(tx)[2]
+                : Object.values(tx)[1];
             this.events.push({
               start: `${year}-${month
                 .toString()
@@ -88,10 +97,8 @@ export default {
                 "0"
               )}`,
               title:
-                [...Object.values(tx)[0]].splice(0, 9).join("") +
-                " " +
-                Object.values(tx)[1],
-              content: Object.values(tx)[0] + " " + Object.values(tx)[1],
+                [...Object.values(tx)[0]].splice(0, 9).join("") + " " + value,
+              content: Object.values(tx)[0] + " " + value,
               class: moneyClass
             });
           });
