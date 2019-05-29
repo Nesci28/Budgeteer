@@ -30,7 +30,10 @@
             style="border-bottom: 1px dotted black;"
           >Dernier mois: {{ getLastMonthResult(budget.title) }}</h3>
           <h3>Tx du mois:</h3>
-          <h4 v-for="tx in getMonthTx(budget.title)" :key="tx[0]">{{ tx.join(' - ') }}$</h4>
+          <h4
+            v-for="tx in getMonthTx(budget.title)"
+            :key="tx[0]"
+          >{{ (tx.length > 1) ? tx.join(' - ') : 0 }}$</h4>
         </div>
       </div>
     </div>

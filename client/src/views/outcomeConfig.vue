@@ -2,7 +2,7 @@
   <div>
     <transition name="fade" mode="out-in"></transition>
     <Hexagon v-if="loading"></Hexagon>
-    <div class="configBox">
+    <div v-if="!loading" class="configBox">
       <div class="item" v-for="event in events" :key="event[0]">
         <ul style="text-align: center;">
           <li>{{event[1]}}</li>
@@ -23,9 +23,12 @@
           <li>
             <select id="frequence" style="background-color:transparent;" v-model="frequence">
               <option disabled value>Freq.</option>
+              <option>Trimestriel</option>
               <option>Mensuel</option>
-              <option>Bi-hebdo</option>
+              <option>Bimensuel</option>
+              <option>Quinzomadaire</option>
               <option>Hebdo</option>
+              <option>Quotidien</option>
             </select>
           </li>
           <li v-if="frequence" style="width:100px; padding-bottom: 7px;">
@@ -163,6 +166,10 @@ export default {
         type: "add",
         transaction: this.event
       });
+      this.startDate = "";
+      this.comment = "";
+      this.montant = "";
+      this.frequence = "";
     },
     remove(event) {
       let id = this.events.indexOf(event);

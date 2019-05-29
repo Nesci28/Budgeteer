@@ -84,10 +84,12 @@ export default {
                 var moneyClass = "outcome";
               }
             }
+            console.log(moneyClass);
             const value =
-              moneyClass == "budget"
+              moneyClass == "depense"
                 ? Object.values(tx)[2]
                 : Object.values(tx)[1];
+            console.log(value);
             this.events.push({
               start: `${year}-${month
                 .toString()

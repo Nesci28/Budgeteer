@@ -87,6 +87,7 @@ export default {
           this.titre = "";
           this.addDate = "";
           this.montant = "";
+          this.radioBox = false;
         }
       }
     }
