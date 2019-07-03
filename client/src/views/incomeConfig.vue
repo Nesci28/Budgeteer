@@ -23,9 +23,12 @@
           <li>
             <select id="frequence" style="background-color:transparent;" v-model="frequence">
               <option disabled value>Freq.</option>
+              <option>Trimestriel</option>
               <option>Mensuel</option>
-              <option>Bi-hebdo</option>
+              <option>Bimensuel</option>
+              <option>Quinzomadaire</option>
               <option>Hebdo</option>
+              <option>Quotidien</option>
             </select>
           </li>
           <li v-if="frequence" style="width:100px; padding-bottom: 7px;">

@@ -36,20 +36,20 @@
 </template>
 
 <script>
-import { Hexagon } from 'vue-loading-spinner';
-import Datepicker from 'vuejs-datepicker';
+import { Hexagon } from "vue-loading-spinner";
+import Datepicker from "vuejs-datepicker";
 
-const axios = require('axios');
+const axios = require("axios");
 
 axios.defaults.withCredentials = true;
 axios.defaults.headers = {
-  'Content-Type': 'application/json',
+  "Content-Type": "application/json"
 };
 
 export default {
   components: {
     Hexagon,
-    Datepicker,
+    Datepicker
   },
   data() {
     return {
@@ -59,20 +59,20 @@ export default {
       titles: [],
       addDate: null,
       radioBox: null,
-      montant: null,
+      montant: null
     };
   },
   methods: {
     async add() {
-      const radioBoxElement = document.getElementById('radioBox');
-      const dateElement = document.getElementById('date');
-      const montantElement = document.getElementById('montant');
-      radioBoxElement.style.border = 'none';
-      dateElement.style.border = 'none';
-      montantElement.style.border = 'none';
-      if (!this.radioBox) radioBoxElement.style.border = '1px solid red';
-      if (!this.addDate) dateElement.style.border = '1px solid red';
-      if (!this.montant) montantElement.style.border = '1px solid red';
+      const radioBoxElement = document.getElementById("radioBox");
+      const dateElement = document.getElementById("date");
+      const montantElement = document.getElementById("montant");
+      radioBoxElement.style.border = "none";
+      dateElement.style.border = "none";
+      montantElement.style.border = "none";
+      if (!this.radioBox) radioBoxElement.style.border = "1px solid red";
+      if (!this.addDate) dateElement.style.border = "1px solid red";
+      if (!this.montant) montantElement.style.border = "1px solid red";
       if (this.radioBox && this.addDate && this.montant) {
         const year = this.addDate.getFullYear();
         const month = this.addDate.getMonth();
@@ -82,30 +82,31 @@ export default {
           month,
           day,
           title: this.radioBox,
-          value: this.montant,
+          value: this.montant
         });
         res = res.data.message;
-        if (res == 'tx added') {
-          this.titre = '';
-          this.addDate = '';
-          this.montant = '';
+        if (res == "tx added") {
+          this.titre = "";
+          this.addDate = "";
+          this.montant = "";
+          this.radioBox = false;
         }
       }
-    },
+    }
   },
   async mounted() {
-    this.urlConfig = '/api/v2/getType';
-    this.urlAddTx = '/api/v2/addTx';
+    this.urlConfig = "/api/v2/getType";
+    this.urlAddTx = "/api/v2/addTx";
     this.titles = await axios.get(this.urlConfig);
     this.titles = this.titles.data.message;
     console.log(this.titles);
     this.loading = false;
   },
   created() {
-    window.addEventListener('keypress', (e) => {
+    window.addEventListener("keypress", e => {
       if (e.keyCode == 13) this.add();
     });
-  },
+  }
 };
 </script>
 

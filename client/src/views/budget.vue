@@ -33,7 +33,7 @@
           <h4
             v-for="tx in getMonthTx(budget.title)"
             :key="tx[0]"
-          >{{ tx == [0] ? tx : tx.join(' - ') }}$</h4>
+          >{{ (tx.length > 1) ? tx.join(' - ') : 0 }}$</h4>
         </div>
       </div>
     </div>

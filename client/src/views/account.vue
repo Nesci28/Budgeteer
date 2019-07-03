@@ -16,15 +16,15 @@
 </template>
 
 <script>
-import { Hexagon } from 'vue-loading-spinner';
-import VueCal from 'vue-cal';
-import 'vue-cal/dist/vuecal.css';
+import { Hexagon } from "vue-loading-spinner";
+import VueCal from "vue-cal";
+import "vue-cal/dist/vuecal.css";
 
-const axios = require('axios');
+const axios = require("axios");
 
 axios.defaults.withCredentials = true;
 axios.defaults.headers = {
-  'Content-Type': 'application/json',
+  "Content-Type": "application/json"
 };
 
 export default {
@@ -36,19 +36,19 @@ export default {
       monthBudget: null,
       events: [],
       months: {
-        1: 'janvier',
-        2: 'fevrier',
-        3: 'mars',
-        4: 'avril',
-        5: 'mai',
-        6: 'juin',
-        7: 'juillet',
-        8: 'aout',
-        9: 'septembre',
-        10: 'octobre',
-        11: 'novembre',
-        12: 'decembre',
-      },
+        1: "janvier",
+        2: "fevrier",
+        3: "mars",
+        4: "avril",
+        5: "mai",
+        6: "juin",
+        7: "juillet",
+        8: "aout",
+        9: "septembre",
+        10: "octobre",
+        11: "novembre",
+        12: "decembre"
+      }
     };
   },
   methods: {
@@ -70,41 +70,45 @@ export default {
       const monthToString = this.months[month.toString()];
       this.monthBudget = this.budget[monthToString];
       const days = Object.keys(this.monthBudget);
-      days.forEach((day) => {
+      days.forEach(day => {
         const budgetDay = this.monthBudget[day];
         if (budgetDay.length > 0) {
           const budgetDayKeys = Object.keys(budgetDay);
-          budgetDayKeys.forEach((tx) => {
+          budgetDayKeys.forEach(tx => {
             tx = budgetDay[tx];
             console.log(tx);
-            if (tx.hasOwnProperty('type')) {
-              var moneyClass = 'depense';
+            if (tx.hasOwnProperty("type")) {
+              var moneyClass = "depense";
             } else if (Object.values(tx)[1] > 0) {
-              var moneyClass = 'income';
+              var moneyClass = "income";
             } else {
-              var moneyClass = 'outcome';
+              var moneyClass = "outcome";
             }
-            const value = moneyClass == 'budget'
-              ? Object.values(tx)[2]
-              : Object.values(tx)[1];
+            console.log(moneyClass);
+            const value =
+              moneyClass == "depense"
+                ? Object.values(tx)[2]
+                : Object.values(tx)[1];
+            console.log(value);
             this.events.push({
               start: `${year}-${month
                 .toString()
-                .padStart(2, '0')}-${day.padStart(2, '0')}`,
-              end: `${year}-${month.toString().padStart(2, '0')}-${day.padStart(
+                .padStart(2, "0")}-${day.padStart(2, "0")}`,
+              end: `${year}-${month.toString().padStart(2, "0")}-${day.padStart(
                 2,
-                '0',
+                "0"
               )}`,
-              title:
-                `${[...Object.values(tx)[0]].splice(0, 9).join('')} ${value}`,
+              title: `${[...Object.values(tx)[0]]
+                .splice(0, 9)
+                .join("")} ${value}`,
               content: `${Object.values(tx)[0]} ${value}`,
-              class: moneyClass,
+              class: moneyClass
             });
           });
         }
       });
       console.log(this.events);
-    },
+    }
   },
   async mounted() {
     this.urlBudget = `/api/v2/account/${this.getYear()}`;
@@ -112,7 +116,7 @@ export default {
     this.budget = this.budget.data.message;
     await this.getMonthBudget(this.getYear(), this.getMonth() + 1);
     this.loading = false;
-  },
+  }
 };
 </script>
 

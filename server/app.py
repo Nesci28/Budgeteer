@@ -8,10 +8,12 @@ from bson import json_util, ObjectId
 import json
 import datetime
 from calendar import monthrange
+from dateutil.relativedelta import relativedelta
 import sys
 from apscheduler.schedulers.background import BackgroundScheduler
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
+import time
 
 
 # Load dotenv file
@@ -488,37 +490,48 @@ def create_transactions(type, tx):
     if type == 'outcome':
         sign = -1
     body = []
-    if tx[1] == 'Mensuel':
-        for year in years:
-            for i in range(tx[5][1] - 1, len(months)):
-                body.append(
-                    [year, months[i], tx[2], tx[3], float(tx[4]) * sign])
-            tx[5][1] = 1
+    if tx[1] == 'Trimestriel':
+        new_date = datetime.datetime.strptime(
+            tx[5][0] + " " + str(tx[5][1]) + " " + str(tx[5][2]), '%Y %m %d')
+        while new_date.year <= int(years[-1]):
+            body.append(
+                [str(new_date.year), str(new_date.month), tx[2], tx[3], float(tx[4]) * sign])
+            new_date = new_date + relativedelta(months=3)
+            print(new_date.year, int(years[-1]))
 
-    if tx[1] == 'Bi-hebdo':
+    if tx[1] == 'Mensuel':
+        new_date = datetime.datetime.strptime(
+            tx[5][0] + " " + str(tx[5][1]) + " " + str(tx[5][2]), '%Y %m %d')
+        while new_date.year <= int(years[-1]):
+            body.append(
+                [str(new_date.year), str(new_date.month), tx[2], tx[3], float(tx[4]) * sign])
+            new_date = new_date + relativedelta(months=1)
+
+    if tx[1] == 'Bimensuel':
+        new_date = datetime.datetime.strptime(
+            tx[5][0] + " " + str(tx[5][1]) + " " + str(tx[5][2]), '%Y %m %d')
+        while new_date.year <= int(years[-1]):
+            body.append(
+                [str(new_date.year), str(new_date.month), str(new_date.day), tx[3], float(tx[4]) * sign])
+            last_day_of_month = monthrange(
+                new_date.year, new_date.month)[1]
+            body.append(
+                [str(new_date.year), str(new_date.month), str(last_day_of_month), tx[3], float(tx[4]) * sign])
+            new_date = new_date + relativedelta(months=1)
+
+    if tx[1] == 'Quinzomadaire':
         days_to_add = 14
     if tx[1] == 'Hebdo':
         days_to_add = 7
-    if tx[1] == 'Bi-hebdo' or tx[1] == 'Hebdo':
-        current_year = tx[5][0]
-        counter = 1
-        for year in years:
-            if counter == 1:
-                month = tx[5][1]
-            else:
-                month = 1
-            if counter == 1:
-                day = tx[5][2]
-                counter = 2
-            while str(current_year) == str(year):
-                body.append([year, months[month - 1], day,
-                             tx[3], float(tx[4]) * sign])
-                new_date = datetime.datetime.strptime(
-                    str(year) + " " + str(month) + " " + str(day), '%Y %m %d')
-                new_date = new_date + datetime.timedelta(days=days_to_add)
-                current_year = str(new_date.year)
-                month = new_date.month
-                day = str(new_date.day)
+    if tx[1] == 'Quotidien':
+        days_to_add = 1
+    if tx[1] == 'Quinzomadaire' or tx[1] == 'Hebdo' or tx[1] == 'Quotidien':
+        new_date = datetime.datetime.strptime(
+            tx[5][0] + " " + str(tx[5][1]) + " " + str(tx[5][2]), '%Y %m %d')
+        while new_date.year <= int(years[-1]):
+            body.append(
+                [str(new_date.year), str(new_date.month), str(new_date.day), tx[3], float(tx[4]) * sign])
+            new_date = new_date + datetime.timedelta(days=days_to_add)
 
     return body
 
