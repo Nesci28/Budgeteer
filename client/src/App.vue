@@ -115,7 +115,7 @@
       <div style="clear:both;"></div>
       <div id="routes">
         <transition name="fade" mode="out-in">
-          <router-view/>
+          <router-view />
         </transition>
       </div>
     </div>
@@ -123,45 +123,46 @@
 </template>
 
 <script>
-const axios = require("axios");
+const axios = require('axios');
+
 axios.defaults.withCredentials = true;
 axios.defaults.headers = {
-  "Content-Type": "application/json"
+  'Content-Type': 'application/json',
 };
 
 export default {
   data() {
     return {
-      urlLogin: "",
-      urlLogout: "",
+      urlLogin: '',
+      urlLogout: '',
       hideMenu: false,
       loggedIn: false,
-      background: null
+      background: null,
     };
   },
   methods: {
     async checkLogin() {
-      let res = await axios.get(this.urlLogin);
-      if (res.data.message == "logged in") {
+      const res = await axios.get(this.urlLogin);
+      if (res.data.message == 'logged in') {
         this.$store.state.loggedIn = true;
-        this.$router.push("/account");
+        this.$router.push('/account');
       }
     },
     async logOut() {
-      let res = await axios.get(this.urlLogout);
+      const res = await axios.get(this.urlLogout);
       console.log(res.data);
-      if (res.data.message == "logged out") {
+      if (res.data.message == 'logged out') {
         this.$store.state.loggedIn = false;
-        this.$router.push("/");
+        this.$router.push('/');
       }
     },
     eventToolbar(event) {
-      let toolbarElement = document.getElementById("toolbar");
-      let toolbarArrowElement = document.getElementById("toolbarArrow");
-      let screenWidth = window.innerWidth;
-      toolbarElement.className = "toolbar";
-      let variant = "";
-      if (!this.$store.state.loggedIn) variant = "loggedOut";
+      const toolbarElement = document.getElementById('toolbar');
+      const toolbarArrowElement = document.getElementById('toolbarArrow');
+      const screenWidth = window.innerWidth;
+      toolbarElement.className = 'toolbar';
+      let variant = '';
+      if (!this.$store.state.loggedIn) variant = 'loggedOut';
       if (event.clientX >= 156) {
         if (screenWidth > 939) {
           toolbarElement.classList.add(`slide-left${variant}`);
@@ -178,8 +179,8 @@ export default {
         if (screenWidth < 489 && screenWidth >= 339) {
           toolbarElement.classList.add(`slide-left${variant}489`);
         }
-        toolbarArrowElement.classList.remove("fa-arrow-left");
-        toolbarArrowElement.classList.add("fa-arrow-right");
+        toolbarArrowElement.classList.remove('fa-arrow-left');
+        toolbarArrowElement.classList.add('fa-arrow-right');
       } else if (event.clientX <= 155) {
         if (screenWidth > 939) {
           toolbarElement.classList.add(`slide-right${variant}`);
@@ -196,32 +197,22 @@ export default {
         if (screenWidth < 489 && screenWidth >= 339) {
           toolbarElement.classList.add(`slide-right${variant}489`);
         }
-        toolbarArrowElement.classList.remove("fa-arrow-right");
-        toolbarArrowElement.classList.add("fa-arrow-left");
+        toolbarArrowElement.classList.remove('fa-arrow-right');
+        toolbarArrowElement.classList.add('fa-arrow-left');
       }
-    }
+    },
   },
   mounted() {
-    if (window.location.href.includes("localhost")) {
-      this.urlLogin = "http://localhost:5000/login";
-      this.urlLogout = "http://localhost:5000/logout";
-    } else if (window.location.href.includes("192.168")) {
-      this.urlLogin = "http://192.168.0.127:5000/login";
-      this.urlLogout = "http://192.168.0.127:5000/logout";
-    } else {
-      this.urlLogin = "https://budgeteer-server.now.sh/login";
-      this.urlLogout = "https://budgeteer-server.now.sh/logout";
+    this.urlLogin = '/api/v2/login';
+    this.urlLogout = '/api/v2/logout';
+    if (!localStorage.background) {
+      localStorage.background = 'wallpaper1.jpg';
     }
-    if (!localStorage["background"]) {
-      localStorage["background"] = "wallpaper1.jpg";
-    }
-    this.background = require(`./assets/${localStorage["background"]}`);
-    const backgoungElement = document.getElementById("app");
-    backgoungElement.style.background = `url(${
-      this.background
-    }) no-repeat center center/cover`;
+    this.background = require(`./assets/${localStorage.background}`);
+    const backgoungElement = document.getElementById('app');
+    backgoungElement.style.background = `url(${this.background}) no-repeat center center/cover`;
     this.checkLogin();
-  }
+  },
 };
 </script>
 

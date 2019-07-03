@@ -6,41 +6,35 @@
     "start": "serve -n dist",
     "serve": "vue-cli-service serve",
     "build": "npm install && vue-cli-service build",
-    "lint": "vue-cli-service lint",
     "deploy": "npm run build && now --public && now alias budgeteer"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^1.2.18",
-    "@fortawesome/free-solid-svg-icons": "^5.8.2",
+    "@fortawesome/fontawesome-svg-core": "^1.2.19",
+    "@fortawesome/free-solid-svg-icons": "^5.9.0",
     "@fortawesome/vue-fontawesome": "^0.1.6",
-    "@fullcalendar/core": "^4.1.0",
-    "@fullcalendar/daygrid": "^4.1.0",
-    "@fullcalendar/vue": "^4.1.1",
-    "animate.css": "^3.7.0",
-    "axios": "^0.18.0",
+    "@fullcalendar/core": "^4.2.0",
+    "@fullcalendar/daygrid": "^4.2.0",
+    "@fullcalendar/vue": "^4.2.2",
+    "animate.css": "^3.7.2",
+    "axios": "^0.18.1",
     "chart.js": "^2.8.0",
-    "core-js": "^2.6.5",
+    "core-js": "^2.6.9",
     "hchs-vue-charts": "^1.2.8",
-    "serve": "^11.0.0",
+    "serve": "^11.0.2",
     "v-calendar-scheduler": "^0.7.4",
     "vue": "^2.6.10",
-    "vue-cal": "^1.58.0",
+    "vue-cal": "^1.61.0",
     "vue-event-calendar": "^1.5.2",
     "vue-loading-spinner": "^1.0.11",
-    "vue-router": "^3.0.3",
-    "vuejs-datepicker": "^1.5.4",
-    "vuetify": "^1.5.5",
+    "vue-router": "^3.0.7",
+    "vuejs-datepicker": "^1.6.2",
+    "vuetify": "^1.5.16",
     "vuex": "^3.0.1"
   },
   "devDependencies": {
-    "@fortawesome/fontawesome-free": "^5.8.2",
-    "@vue/cli-plugin-babel": "^3.7.0",
-    "@vue/cli-plugin-eslint": "^3.7.0",
-    "@vue/cli-service": "^3.7.0",
-    "@vue/eslint-config-airbnb": "^4.0.0",
-    "babel-eslint": "^10.0.1",
-    "eslint": "^5.16.0",
-    "eslint-plugin-vue": "^5.0.0",
+    "@fortawesome/fontawesome-free": "^5.9.0",
+    "@vue/cli-plugin-babel": "^3.9.0",
+    "@vue/cli-service": "^3.9.0",
     "node-sass": "^4.9.0",
     "sass-loader": "^7.1.0",
     "stylus": "^0.54.5",
@@ -48,20 +42,6 @@
     "vue-cli-plugin-vuetify": "^0.5.0",
     "vue-template-compiler": "^2.5.21",
     "vuetify-loader": "^1.0.5"
-  },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
-    },
-    "extends": [
-      "plugin:vue/essential",
-      "@vue/airbnb"
-    ],
-    "rules": {},
-    "parserOptions": {
-      "parser": "babel-eslint"
-    }
   },
   "postcss": {
     "plugins": {

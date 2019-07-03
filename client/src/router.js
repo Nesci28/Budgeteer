@@ -1,81 +1,81 @@
-import Vue from "vue";
-import Router from "vue-router";
-import home from "./views/home";
-import login from "./views/login";
-import signup from "./views/signup";
-import settings from "./views/settings";
-import account from "./views/account";
-import incomeConfig from "./views/incomeConfig";
-import outcomeConfig from "./views/outcomeConfig";
-import budgetConfig from "./views/budgetConfig";
-import budget from "./views/budget";
-import outcomeAdd from "./views/outcomeAdd";
-import incomeAdd from "./views/incomeAdd";
-import charts from "./views/charts";
+import Vue from 'vue';
+import Router from 'vue-router';
+import home from './views/home';
+import login from './views/login';
+import signup from './views/signup';
+import settings from './views/settings';
+import account from './views/account';
+import incomeConfig from './views/incomeConfig';
+import outcomeConfig from './views/outcomeConfig';
+import budgetConfig from './views/budgetConfig';
+import budget from './views/budget';
+import outcomeAdd from './views/outcomeAdd';
+import incomeAdd from './views/incomeAdd';
+import charts from './views/charts';
 
 Vue.use(Router);
 
 export default new Router({
   routes: [
     {
-      path: "/income/config",
-      name: "incomeConfig",
-      component: incomeConfig
+      path: '/income/config',
+      name: 'incomeConfig',
+      component: incomeConfig,
     },
     {
-      path: "/outcome/config",
-      name: "outcomeConfig",
-      component: outcomeConfig
+      path: '/outcome/config',
+      name: 'outcomeConfig',
+      component: outcomeConfig,
     },
     {
-      path: "/budget/config",
-      name: "budgetConfig",
-      component: budgetConfig
+      path: '/budget/config',
+      name: 'budgetConfig',
+      component: budgetConfig,
     },
     {
-      path: "/income/add",
-      name: "incomeAdd",
-      component: incomeAdd
+      path: '/income/add',
+      name: 'incomeAdd',
+      component: incomeAdd,
     },
     {
-      path: "/outcome/add",
-      name: "outcomeAdd",
-      component: outcomeAdd
+      path: '/outcome/add',
+      name: 'outcomeAdd',
+      component: outcomeAdd,
     },
     {
-      path: "/",
-      name: "home",
-      component: home
+      path: '/',
+      name: 'home',
+      component: home,
     },
     {
-      path: "/login",
-      name: "login",
-      component: login
+      path: '/login',
+      name: 'login',
+      component: login,
     },
     {
-      path: "/signup",
-      name: "signup",
-      component: signup
+      path: '/signup',
+      name: 'signup',
+      component: signup,
     },
     {
-      path: "/settings",
-      name: "settings",
-      component: settings
+      path: '/settings',
+      name: 'settings',
+      component: settings,
     },
     {
-      path: "/account",
-      name: "account",
-      component: account
+      path: '/account',
+      name: 'account',
+      component: account,
     },
     {
-      path: "/budget",
-      name: "budget",
-      component: budget
+      path: '/budget',
+      name: 'budget',
+      component: budget,
     },
     {
-      path: "/charts",
-      name: "charts",
-      component: charts
-    }
-  ]
+      path: '/charts',
+      name: 'charts',
+      component: charts,
+    },
+  ],
 });

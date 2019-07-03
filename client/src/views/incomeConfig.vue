@@ -42,7 +42,7 @@
               v-model="commentaire"
               placeholder="Commentaire"
               style="background-color:transparent; width: 100%;"
-            >
+            />
           </li>
           <li v-if="commentaire">
             <input
@@ -52,7 +52,7 @@
               v-model="montant"
               placeholder="Montant"
               onkeypress="return event.charCode == 46 || (event.charCode >= 48 && event.charCode <= 57)"
-            >
+            />
           </li>
           <li v-if="montant" style="float: right;">
             <a @click="add" class="btn btn-success">+</a>
@@ -65,90 +65,92 @@
 </template>
 
 <script>
-const axios = require("axios");
+import { Hexagon } from 'vue-loading-spinner';
+import Datepicker from 'vuejs-datepicker';
+
+const axios = require('axios');
+
 axios.defaults.withCredentials = true;
 axios.defaults.headers = {
-  "Content-Type": "application/json"
+  'Content-Type': 'application/json',
 };
-import { Hexagon } from "vue-loading-spinner";
-import Datepicker from "vuejs-datepicker";
 
 export default {
   components: {
     Hexagon,
-    Datepicker
+    Datepicker,
   },
   data() {
     return {
       loading: true,
-      urlConfig: "",
-      frequence: "",
+      urlConfig: '',
+      frequence: '',
       day: null,
       days: {
-        "1": "Dimanche",
-        "2": "Lundi",
-        "3": "Mardi",
-        "4": "Mercredi",
-        "5": "Jeudi",
-        "6": "Vendredi",
-        "7": "Samedi"
+        1: 'Dimanche',
+        2: 'Lundi',
+        3: 'Mardi',
+        4: 'Mercredi',
+        5: 'Jeudi',
+        6: 'Vendredi',
+        7: 'Samedi',
       },
       months: {
-        Jan: "01",
-        Feb: "02",
-        Mar: "03",
-        Apr: "04",
-        May: "05",
-        Jun: "06",
-        Jul: "07",
-        Aug: "08",
-        Sep: "09",
-        Oct: "10",
-        Nov: "11",
-        Dec: "12"
+        Jan: '01',
+        Feb: '02',
+        Mar: '03',
+        Apr: '04',
+        May: '05',
+        Jun: '06',
+        Jul: '07',
+        Aug: '08',
+        Sep: '09',
+        Oct: '10',
+        Nov: '11',
+        Dec: '12',
       },
-      commentaire: "",
-      montant: "",
+      commentaire: '',
+      montant: '',
       event: [],
       events: [],
       startEvents: [],
       checkboxDate: false,
-      startDate: ""
+      startDate: '',
     };
   },
   methods: {
     add() {
-      let frequenceElement = document.getElementById("frequence");
+      const frequenceElement = document.getElementById('frequence');
       if (!this.frequence && frequenceElement) {
-        frequenceElement.style.border = "solid 1px red";
+        frequenceElement.style.border = 'solid 1px red';
         return;
       }
-      let dayElement = document.getElementById("day");
+      const dayElement = document.getElementById('day');
       if (!this.day && dayElement) {
-        dayElement.style.border = "solid 1px red";
+        dayElement.style.border = 'solid 1px red';
         return;
       }
-      let commentaireElement = document.getElementById("commentaire");
+      const commentaireElement = document.getElementById('commentaire');
       if (!this.commentaire && commentaireElement) {
-        commentaireElement.style.border = "solid 1px red";
+        commentaireElement.style.border = 'solid 1px red';
         return;
       }
-      let montantElement = document.getElementById("montant");
+      const montantElement = document.getElementById('montant');
       if (!this.montant && montantElement) {
-        montantElement.style.border = "solid 1px red";
+        montantElement.style.border = 'solid 1px red';
         return;
       }
-      if (this.frequence == "Bi-hebdo" || this.frequence == "Hebdo") {
+      if (this.frequence == 'Bi-hebdo' || this.frequence == 'Hebdo') {
         this.day = this.startDate.getDay() + 1;
         this.day = this.days[this.day];
       } else {
-        this.day = this.startDate.toString().split(" ")[2];
+        this.day = this.startDate.toString().split(' ')[2];
       }
-      this.startDate = this.startDate.toString().split(" ");
+      this.startDate = this.startDate.toString().split(' ');
       this.startDate = [
         this.startDate[3].toString(),
         +this.months[this.startDate[1]],
-        +this.startDate[2]
+        +this.startDate[2],
       ];
       this.event = [
         this.events.length,
@@ -156,47 +158,39 @@ export default {
         this.day,
         this.commentaire,
         this.montant,
-        this.startDate
+        this.startDate,
       ];
       this.events.push(this.event);
       axios.post(this.urlConfig, {
-        type: "add",
-        transaction: this.event
+        type: 'add',
+        transaction: this.event,
       });
-      this.startDate = "";
-      this.comment = "";
-      this.montant = "";
-      this.frequence = "";
+      this.startDate = '';
+      this.comment = '';
+      this.montant = '';
+      this.frequence = '';
     },
     remove(event) {
-      let id = this.events.indexOf(event);
-      this.events = this.events.filter(function(item) {
-        return item !== event;
-      });
+      const id = this.events.indexOf(event);
+      this.events = this.events.filter(item => item !== event);
       axios.post(this.urlConfig, {
-        type: "remove",
-        transaction: event
+        type: 'remove',
+        transaction: event,
       });
-    }
+    },
   },
   async mounted() {
-    if (window.location.href.includes("localhost")) {
-      this.urlConfig = "http://localhost:5000/config/income";
-    } else if (window.location.href.includes("192.168")) {
-      this.urlConfig = "http://192.168.0.127:5000/config/income";
-    } else {
-      this.urlConfig = "https://budgeteer-server.now.sh/config/income";
-    }
+    this.urlConfig = '/api/v2/config/income';
     this.events = await axios.get(this.urlConfig);
     this.events = this.events.data.message;
     this.startEvents = this.events;
     this.loading = false;
   },
   created() {
-    window.addEventListener("keypress", e => {
+    window.addEventListener('keypress', (e) => {
       if (e.keyCode == 13) this.add();
     });
-  }
+  },
 };
 </script>
 

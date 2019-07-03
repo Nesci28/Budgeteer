@@ -9,15 +9,15 @@
 export default {
   data() {
     return {
-      loggedIn: ""
+      loggedIn: '',
     };
   },
   methods: {},
   mounted() {
-    if (!localStorage["background"]) {
-      localStorage["background"] = "wallpaper1.jpg";
+    if (!localStorage.background) {
+      localStorage.background = 'wallpaper1.jpg';
     }
-  }
+  },
 };
 </script>
 

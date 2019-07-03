@@ -35,58 +35,60 @@
 </template>
 
 <script>
-import { Hexagon } from "vue-loading-spinner";
-const axios = require("axios");
+import { Hexagon } from 'vue-loading-spinner';
+
+const axios = require('axios');
+
 axios.defaults.withCredentials = true;
 axios.defaults.headers = {
-  "Content-Type": "application/json"
+  'Content-Type': 'application/json',
 };
 
 export default {
   components: {
-    Hexagon
+    Hexagon,
   },
   data() {
     return {
       beginZero: true,
-      borderColor: "#4591a8",
+      borderColor: '#4591a8',
       data: {
-        month: []
+        month: [],
       },
-      dataLabel: "Fluctuation",
+      dataLabel: 'Fluctuation',
       labels: {
-        month: [8, 10, 12, 14, 16]
+        month: [8, 10, 12, 14, 16],
       },
       currentMonth: null,
       currentYear: null,
       months: [
-        "janvier",
-        "fevrier",
-        "mars",
-        "avril",
-        "mai",
-        "juin",
-        "juillet",
-        "aout",
-        "septembre",
-        "octobre",
-        "novembre",
-        "decembre"
+        'janvier',
+        'fevrier',
+        'mars',
+        'avril',
+        'mai',
+        'juin',
+        'juillet',
+        'aout',
+        'septembre',
+        'octobre',
+        'novembre',
+        'decembre',
       ],
       years: [],
       history: null,
       budgets: null,
-      loading: true
+      loading: true,
     };
   },
   methods: {
     getCurrentMonth() {
-      let date = new Date();
+      const date = new Date();
       this.currentMonthInt = date.getMonth();
       this.currentMonth = this.months[date.getMonth()];
     },
     getCurrentYear() {
-      let date = new Date();
+      const date = new Date();
       this.currentYear = date.getFullYear();
       for (let i = 0; i < 3; i++) {
         this.years.push((this.currentYear + i).toString());
@@ -95,52 +97,46 @@ export default {
     async loadMonth(month, year) {
       this.budgets = await axios.post(this.urlBudget, {
         month: this.months.indexOf(month),
-        year: year
+        year,
       });
       this.budgets = this.budgets.data.message;
-      this.history = this.budgets["tx_month"];
+      this.history = this.budgets.tx_month;
       this.data.month = [];
       this.labels.month = [];
       this.renderChart();
     },
     renderChart() {
-      Object.keys(this.history).forEach(day => {
+      Object.keys(this.history).forEach((day) => {
         if (this.history[day].length > 0) {
           var valueToAdd = 0;
-          this.history[day].forEach(tx => {
-            if (tx.hasOwnProperty("type")) {
-              valueToAdd = valueToAdd + tx["value"] * -1;
+          this.history[day].forEach((tx) => {
+            if (tx.hasOwnProperty('type')) {
+              valueToAdd += tx.value * -1;
             } else {
-              valueToAdd = valueToAdd + tx["value"];
+              valueToAdd += tx.value;
             }
           });
         }
         let sum = day == 1 ? 0 : this.data.month[this.data.month.length - 1];
-        if (valueToAdd) sum = sum + valueToAdd;
+        if (valueToAdd) sum += valueToAdd;
         this.data.month.push(sum);
         this.labels.month.push(day);
       });
       this.loading = false;
-    }
+    },
   },
   async mounted() {
-    if (window.location.href.includes("localhost")) {
-      this.urlBudget = "http://localhost:5000/budget";
-    } else if (window.location.href.includes("192.168")) {
-      this.urlBudget = "http://192.168.0.127:5000/budget";
-    } else {
-      this.urlBudget = "https://budgeteer-server.now.sh/budget";
-    }
+    this.urlBudget = '/api/v2/budget';
     this.getCurrentMonth();
     this.getCurrentYear();
     this.budgets = await axios.post(this.urlBudget, {
       month: this.currentMonthInt,
-      year: this.currentYear
+      year: this.currentYear,
     });
     this.budgets = this.budgets.data.message;
-    this.history = this.budgets["tx_month"];
+    this.history = this.budgets.tx_month;
     this.renderChart();
-  }
+  },
 };
 </script>
 

@@ -12,7 +12,7 @@
               :value="title"
               name="title"
               v-model="radioBox"
-            >
+            />
             <label style="text-transform:capitalize;" :for="title">{{ title }}</label>
           </div>
         </div>
@@ -28,7 +28,7 @@
           type="text"
           placeholder="montant"
           v-model="montant"
-        >
+        />
         <a @click="add" class="btn btn-primary">Ajouter</a>
       </div>
     </div>
@@ -36,18 +36,20 @@
 </template>
 
 <script>
-const axios = require("axios");
+import { Hexagon } from 'vue-loading-spinner';
+import Datepicker from 'vuejs-datepicker';
+
+const axios = require('axios');
+
 axios.defaults.withCredentials = true;
 axios.defaults.headers = {
-  "Content-Type": "application/json"
+  'Content-Type': 'application/json',
 };
-import { Hexagon } from "vue-loading-spinner";
-import Datepicker from "vuejs-datepicker";
 
 export default {
   components: {
     Hexagon,
-    Datepicker
+    Datepicker,
   },
   data() {
     return {
@@ -57,20 +59,20 @@ export default {
       titles: [],
       addDate: null,
       radioBox: null,
-      montant: null
+      montant: null,
     };
   },
   methods: {
     async add() {
-      const radioBoxElement = document.getElementById("radioBox");
-      const dateElement = document.getElementById("date");
-      const montantElement = document.getElementById("montant");
-      radioBoxElement.style.border = "none";
-      dateElement.style.border = "none";
-      montantElement.style.border = "none";
-      if (!this.radioBox) radioBoxElement.style.border = "1px solid red";
-      if (!this.addDate) dateElement.style.border = "1px solid red";
-      if (!this.montant) montantElement.style.border = "1px solid red";
+      const radioBoxElement = document.getElementById('radioBox');
+      const dateElement = document.getElementById('date');
+      const montantElement = document.getElementById('montant');
+      radioBoxElement.style.border = 'none';
+      dateElement.style.border = 'none';
+      montantElement.style.border = 'none';
+      if (!this.radioBox) radioBoxElement.style.border = '1px solid red';
+      if (!this.addDate) dateElement.style.border = '1px solid red';
+      if (!this.montant) montantElement.style.border = '1px solid red';
       if (this.radioBox && this.addDate && this.montant) {
         const year = this.addDate.getFullYear();
         const month = this.addDate.getMonth();
@@ -80,38 +82,30 @@ export default {
           month,
           day,
           title: this.radioBox,
-          value: this.montant
+          value: this.montant,
         });
         res = res.data.message;
-        if (res == "tx added") {
-          this.titre = "";
-          this.addDate = "";
-          this.montant = "";
+        if (res == 'tx added') {
+          this.titre = '';
+          this.addDate = '';
+          this.montant = '';
         }
       }
-    }
+    },
   },
   async mounted() {
-    if (window.location.href.includes("localhost")) {
-      this.urlConfig = "http://localhost:5000/getType";
-      this.urlAddTx = "http://localhost:5000/addTx";
-    } else if (window.location.href.includes("192.168")) {
-      this.urlConfig = "http://192.168.0.127:5000/getType";
-      this.urlAddTx = "http://192.168.0.127:5000/addTx";
-    } else {
-      this.urlConfig = "https://budgeteer-server.now.sh/getType";
-      this.urlAddTx = "https://budgeteer-server.now.sh/addTx";
-    }
+    this.urlConfig = '/api/v2/getType';
+    this.urlAddTx = '/api/v2/addTx';
     this.titles = await axios.get(this.urlConfig);
     this.titles = this.titles.data.message;
     console.log(this.titles);
     this.loading = false;
   },
   created() {
-    window.addEventListener("keypress", e => {
+    window.addEventListener('keypress', (e) => {
       if (e.keyCode == 13) this.add();
     });
-  }
+  },
 };
 </script>
 
